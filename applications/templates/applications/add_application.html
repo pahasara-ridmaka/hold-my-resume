@@ -1,0 +1,81 @@
+<!-- applications/templates/applications/add_application.html -->
+{% extends "base.html" %}  
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <div class="border-2 border-black rounded-[24px] p-8 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-6 border-b-2 border-black">
+      <div>
+        <h1 class="text-2xl font-black tracking-tight text-black">
+          Add New Application
+        </h1>
+        <p class="text-gray-600 text-xs mt-0.5">
+          Enter details about your job application.
+        </p>
+      </div>
+      <a
+        href="{% url 'applications:list' %}"
+        class="border border-black rounded-full px-4 py-1.5 text-xs font-bold hover:bg-black hover:text-white transition"
+      >
+        Back
+      </a>
+    </div>
+
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-5 pt-6">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="p-3 border border-red-500 bg-red-50 text-red-700 text-xs rounded-xl font-medium">
+        {{ form.non_field_errors }}
+      </div>
+      {% endif %}
+
+      <div class="space-y-4">
+        {% for field in form %}
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5" for="{{ field.id_for_label }}">
+            {{ field.label }}
+          </label>
+          
+          <div class="relative">
+            {{ field }}
+          </div>
+
+          {% if field.errors %}
+          <p class="text-xs text-red-600 mt-1 font-semibold">
+            {{ field.errors|striptags }}
+          </p>
+          {% endif %}
+
+          {% if field.help_text %}
+          <p class="text-[11px] text-gray-500 mt-1">
+            {{ field.help_text }}
+          </p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+        <a
+          href="{% url 'applications:list' %}"
+          class="border border-black rounded-full px-5 py-2 text-sm font-semibold hover:bg-gray-100 transition"
+        >
+          Cancel
+        </a>
+        <button
+          type="submit"
+          class="bg-black text-white border border-black rounded-full px-6 py-2 text-sm font-bold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+        >
+          Save Application
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
