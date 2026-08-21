@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CareerTrack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+</head>
+<body class="flex h-screen bg-white text-black overflow-hidden">
+
+    <!-- Collapsible Sidebar -->
+    <aside id="sidebar" class="w-64 border-r border-black p-4 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0">
+        <div class="space-y-6">
+            <!-- Header & Toggle Button -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 overflow-hidden">
+                    <div class="w-8 h-8 rounded-full border-2 border-black flex items-center justify-center font-bold text-xs shrink-0">CT</div>
+                    <h1 class="text-xl font-bold tracking-tight sidebar-label whitespace-nowrap">CareerTrack</h1>
+                </div>
+                <button onclick="toggleSidebar()" class="p-1.5 rounded-lg border border-black hover:bg-gray-100 transition" title="Toggle Sidebar">
+                    <svg id="toggle-icon" class="w-4 h-4 stroke-black transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-2">
+                <a href="{% url 'applications:dashboard' %}" 
+                   hx-get="{% url 'applications:dashboard' %}" 
+                   hx-target="#main-content" 
+                   hx-push-url="true"
+                   class="flex items-center gap-3 p-2.5 rounded-xl border border-black hover:bg-black hover:text-white transition group">
+                    <svg class="w-5 h-5 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    <span class="font-bold text-sm sidebar-label whitespace-nowrap">Dashboard</span>
+                </a>
+
+                <a href="{% url 'applications:list' %}" 
+                   hx-get="{% url 'applications:list' %}" 
+                   hx-target="#main-content" 
+                   hx-push-url="true"
+                   class="flex items-center gap-3 p-2.5 rounded-xl border border-black hover:bg-black hover:text-white transition group">
+                    <svg class="w-5 h-5 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    <span class="font-bold text-sm sidebar-label whitespace-nowrap">Applications</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- User Section at Bottom -->
+        <div class="border-t border-black pt-4 flex items-center gap-3 overflow-hidden">
+            <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center font-bold text-xs shrink-0">AM</div>
+            <div class="sidebar-label whitespace-nowrap">
+                <p class="font-bold text-xs">Alex Morgan</p>
+                <p class="text-[10px] text-gray-500">Product Designer</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Dynamic Area -->
+    <main id="main-content" class="flex-1 p-8 overflow-y-auto">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Sidebar Toggle JS -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const labels = document.querySelectorAll('.sidebar-label');
+            const toggleIcon = document.getElementById('toggle-icon');
+
+            if (sidebar.classList.contains('w-64')) {
+                // Collapse to icon-only view
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20');
+                labels.forEach(el => el.classList.add('hidden'));
+                toggleIcon.classList.add('rotate-180');
+            } else {
+                // Expand to full view
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+                labels.forEach(el => el.classList.remove('hidden'));
+                toggleIcon.classList.remove('rotate-180');
+            }
+        }
+    </script>
+</body>
+</html>
