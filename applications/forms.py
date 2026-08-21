@@ -44,7 +44,10 @@ class ApplicationForm(forms.ModelForm):
 
         widgets = {
             "job_title": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "e.g. Software Engineer"}
+                attrs={
+                    "class": "form-control",
+                      "placeholder": "e.g. Software Engineer"
+                      }
             ),
             "job_url": forms.URLInput(
                 attrs={"class": "form-control", "placeholder": "https://..."}
