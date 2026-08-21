@@ -1,14 +1,14 @@
 <!-- applications/templates/applications/partials/_application_content.html -->
 {% load humanize %}
 
-<div class="space-y-8">
+<div class="space-y-6">
   <!-- Top Title & Action -->
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-4xl font-extrabold tracking-tight text-black">
+      <h1 class="text-3xl font-extrabold tracking-tight text-black">
         Applications
       </h1>
-      <p class="text-gray-600 text-sm mt-1">
+      <p class="text-gray-500 text-xs mt-0.5">
         Track and manage your active job opportunities.
       </p>
     </div>
@@ -16,10 +16,10 @@
     <div class="flex items-center gap-3">
       <!-- Filter Button -->
       <button
-        class="inline-flex items-center gap-2 border border-black rounded-full px-5 py-2 text-sm font-semibold hover:bg-black hover:text-white transition"
+        class="inline-flex items-center gap-2 border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-black hover:text-white transition"
       >
         <svg
-          class="w-4 h-4 stroke-current"
+          class="w-3.5 h-3.5 stroke-current"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="2"
@@ -38,10 +38,10 @@
         hx-get="{% url 'applications:add_application' %}"
         hx-target="#drawer-container"
         hx-swap="innerHTML"
-        class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-5 py-2 text-sm font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+        class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
       >
         <svg
-          class="w-4 h-4 stroke-current"
+          class="w-3.5 h-3.5 stroke-current"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="2.5"
@@ -57,98 +57,108 @@
     </div>
   </div>
 
-  <!-- Metric Stat Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-    <div
-      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-    >
-      <p class="text-xs font-bold uppercase tracking-wider text-black">
-        TOTAL APPLIED
-      </p>
-      <p
-        id="metric-total"
-        class="text-5xl font-black tracking-tight text-black"
-      >
-        {{ metrics.total }}
-      </p>
+  <!-- Metric Stat Bar (Minimal Bar with 5 stats) -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border border-black/15 bg-neutral-50/70 rounded-xl divide-y sm:divide-y-0 sm:divide-x divide-black/10 overflow-hidden">
+    
+    <!-- Total -->
+    <div class="p-3.5 px-5">
+      <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Total Applied</span>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span id="metric-total" class="text-2xl font-black tracking-tight text-black">{{ metrics.total }}</span>
+        <span class="text-[11px] text-neutral-400 font-medium">all</span>
+      </div>
     </div>
-    <div
-      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-    >
-      <p class="text-xs font-bold uppercase tracking-wider text-black">
-        APPLIED
-      </p>
-      <p
-        id="metric-applied"
-        class="text-5xl font-black tracking-tight text-black"
-      >
-        {{ metrics.applied }}
-      </p>
+
+    <!-- Applied -->
+    <div class="p-3.5 px-5">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Applied</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span id="metric-applied" class="text-2xl font-black tracking-tight text-black">{{ metrics.applied }}</span>
+        <span class="text-[11px] text-neutral-400 font-medium">in queue</span>
+      </div>
     </div>
-    <div
-      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-    >
-      <p class="text-xs font-bold uppercase tracking-wider text-black">
-        INTERVIEWS
-      </p>
-      <p
-        id="metric-interviewing"
-        class="text-5xl font-black tracking-tight text-black"
-      >
-        {{ metrics.interviewing }}
-      </p>
+
+    <!-- Interviewing -->
+    <div class="p-3.5 px-5">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Interviews</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span id="metric-interviewing" class="text-2xl font-black tracking-tight text-black">{{ metrics.interviewing }}</span>
+        <span class="text-[11px] text-neutral-400 font-medium">active</span>
+      </div>
     </div>
-    <div
-      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-    >
-      <p class="text-xs font-bold uppercase tracking-wider text-black">
-        OFFERS
-      </p>
-      <p
-        id="metric-offer"
-        class="text-5xl font-black tracking-tight text-black"
-      >
-        {{ metrics.offer }}
-      </p>
+
+    <!-- Offer -->
+    <div class="p-3.5 px-5">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Offers</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span id="metric-offer" class="text-2xl font-black tracking-tight text-black">{{ metrics.offer }}</span>
+        <span class="text-[11px] text-emerald-600 font-medium">won</span>
+      </div>
     </div>
+
+    <!-- Rejected -->
+    <div class="p-3.5 px-5 col-span-2 sm:col-span-1 border-t sm:border-t-0">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Rejected</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span id="metric-rejected" class="text-2xl font-black tracking-tight text-black">{{ metrics.rejected|default:0 }}</span>
+        <span class="text-[11px] text-rose-500 font-medium">closed</span>
+      </div>
+    </div>
+
   </div>
 
   <!-- Kanban Board Columns Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-4">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-2">
     {% for column in kanban_columns %}
     <div class="space-y-4 kanban-column-wrapper">
       <!-- Column Header -->
-      <div
-        class="flex items-center justify-between pb-3 border-b-2 border-black"
-      >
+      <div class="flex items-center justify-between pb-3 border-b-2 border-black">
         <div class="flex items-center gap-2">
           <span
-            class="w-2.5 h-2.5 rounded-full {% if column.status_key == 'APPLIED' or column.status_key == 'OFFER' %}bg-black{% else %}border-2 border-black{% endif %}"
+            class="w-2.5 h-2.5 rounded-full border border-black 
+            {% if column.status_key == 'APPLIED' %}bg-blue-500
+            {% elif column.status_key == 'INTERVIEWING' %}bg-amber-400
+            {% elif column.status_key == 'OFFER' %}bg-emerald-500
+            {% elif column.status_key == 'REJECTED' %}bg-rose-500
+            {% else %}bg-black{% endif %}"
           ></span>
-          <span class="font-bold text-xs tracking-wider uppercase"
-            >{{ column.label }}</span
-          >
-          <span
-            class="border border-black rounded-full px-2 py-0.5 text-xs font-bold col-count"
-          >
+          <span class="font-bold text-xs tracking-wider uppercase">
+            {{ column.label }}
+          </span>
+          <span class="border border-black rounded-full px-2 py-0.5 text-xs font-bold col-count bg-white">
             {{ column.apps|length }}
           </span>
         </div>
-        <button
-          class="text-lg leading-none font-bold tracking-widest hover:text-gray-500"
-        >
+        <button class="text-lg leading-none font-bold tracking-widest hover:text-gray-500">
           ···
         </button>
       </div>
 
       <!-- Draggable Container -->
       <div
-        class="kanban-col space-y-4 min-h-[350px] p-1 rounded-2xl bg-gray-50/50"
+        class="kanban-col space-y-4 min-h-[350px] p-2 rounded-2xl bg-gray-50/50"
         data-status="{{ column.status_key }}"
       >
         {% for app in column.apps %}
         <div
-          class="kanban-card group border-2 border-black rounded-2xl p-4 bg-white space-y-3 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-grab active:cursor-grabbing select-none"
+          class="kanban-card group border-2 border-black rounded-2xl p-4 space-y-3 transition-all cursor-grab active:cursor-grabbing select-none hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
+          {% if column.status_key == 'APPLIED' %}bg-blue-50/60
+          {% elif column.status_key == 'INTERVIEWING' %}bg-amber-50/60
+          {% elif column.status_key == 'OFFER' %}bg-emerald-50/60
+          {% elif column.status_key == 'REJECTED' %}bg-rose-50/60
+          {% else %}bg-white{% endif %}"
           data-id="{{ app.id }}"
           hx-get="{% url 'applications:application_detail_drawer' app.id %}"
           hx-target="#drawer-container"
@@ -156,74 +166,47 @@
           hx-trigger="click[isCardClick(event)]"
         >
           <!-- Top Row: Title, Company & Date -->
-          <div
-            class="flex justify-between items-start gap-2 pointer-events-none"
-          >
+          <div class="flex justify-between items-start gap-2 pointer-events-none">
             <div class="min-w-0 flex-1">
-              <h3
-                class="text-base font-bold text-black leading-snug truncate group-hover:text-gray-800"
-              >
+              <h3 class="text-base font-bold text-black leading-snug truncate group-hover:text-gray-800">
                 {{ app.job_title }}
               </h3>
-              <div
-                class="flex items-center gap-1.5 text-xs text-gray-600 font-medium mt-0.5"
-              >
-                <svg
-                  class="w-3.5 h-3.5 stroke-current shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                  />
+              <div class="flex items-center gap-1.5 text-xs text-gray-700 font-medium mt-0.5">
+                <svg class="w-3.5 h-3.5 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
                 <span class="truncate">{{ app.company.name }}</span>
               </div>
             </div>
 
             <!-- Date Badge -->
-            <span
-              class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold shrink-0 whitespace-nowrap bg-gray-50"
-            >
-              {% if app.applied_date %} {{ app.applied_date|date:"M d" }} {%
-              else %} {{ app.created_at|timesince }} ago {% endif %}
+            <span class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold shrink-0 whitespace-nowrap bg-white">
+              {% if app.applied_date %} {{ app.applied_date|date:"M d" }} {% else %} {{ app.created_at|timesince }} ago {% endif %}
             </span>
           </div>
 
           <!-- Bottom Row: Meta Badges -->
-          <div
-            class="flex items-center justify-between gap-1.5 pt-1 border-t border-gray-100 pointer-events-none"
-          >
+          <div class="flex items-center justify-between gap-1.5 pt-1 border-t border-black/10 pointer-events-none">
             <div class="flex items-center gap-1.5 overflow-hidden">
               {% if app.salary_estimate %}
-              <span
-                class="border border-black rounded-md px-1.5 py-0.5 text-[11px] font-bold bg-white text-black shrink-0"
-              >
+              <span class="border border-black rounded-md px-1.5 py-0.5 text-[11px] font-bold bg-white text-black shrink-0">
                 ${{ app.salary_estimate|floatformat:0 }}
               </span>
-              {% endif %} {% if app.company.location %}
-              <span
-                class="border border-gray-200 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-gray-700 bg-gray-50 truncate max-w-[100px]"
-              >
+              {% endif %} 
+              {% if app.company.location %}
+              <span class="border border-black/20 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-gray-800 bg-white/70 truncate max-w-[100px]">
                 {{ app.company.location }}
               </span>
               {% endif %}
             </div>
 
-            <span
-              class="text-[10px] font-bold uppercase tracking-wider text-gray-500 shrink-0"
-            >
+            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-600 shrink-0">
               {{ app.get_platform_display }}
             </span>
           </div>
         </div>
         {% empty %}
-        <div
-          class="empty-placeholder text-center py-8 text-xs text-gray-400 font-semibold border-2 border-dashed border-gray-200 rounded-2xl"
-        >
+        <div class="empty-placeholder text-center py-8 text-xs text-gray-400 font-semibold border-2 border-dashed border-gray-200 rounded-2xl">
           No applications
         </div>
         {% endfor %}
@@ -303,11 +286,13 @@
     const appliedEl = document.getElementById("metric-applied");
     const interviewingEl = document.getElementById("metric-interviewing");
     const offerEl = document.getElementById("metric-offer");
+    const rejectedEl = document.getElementById("metric-rejected");
 
     if (totalEl) totalEl.textContent = totalApplications;
     if (appliedEl) appliedEl.textContent = statusCounts.APPLIED;
     if (interviewingEl) interviewingEl.textContent = statusCounts.INTERVIEWING;
     if (offerEl) offerEl.textContent = statusCounts.OFFER;
+    if (rejectedEl) rejectedEl.textContent = statusCounts.REJECTED;
   }
 
   function initKanban() {
@@ -315,6 +300,13 @@
     const csrftoken =
       getCookie("csrftoken") ||
       document.querySelector("[name=csrfmiddlewaretoken]")?.value;
+
+    const statusColors = {
+      APPLIED: "bg-blue-50/60",
+      INTERVIEWING: "bg-amber-50/60",
+      OFFER: "bg-emerald-50/60",
+      REJECTED: "bg-rose-50/60",
+    };
 
     columns.forEach((col) => {
       new Sortable(col, {
@@ -335,6 +327,16 @@
           if (evt.from !== evt.to) {
             const cardId = evt.item.getAttribute("data-id");
             const targetStatus = evt.to.getAttribute("data-status");
+
+            // Update card styling based on target status
+            evt.item.classList.remove(
+              "bg-blue-50/60",
+              "bg-amber-50/60",
+              "bg-emerald-50/60",
+              "bg-rose-50/60",
+              "bg-white"
+            );
+            evt.item.classList.add(statusColors[targetStatus] || "bg-white");
 
             refreshKanbanCounts();
 
