@@ -1,0 +1,375 @@
+<!-- applications/templates/applications/partials/_application_content.html -->
+{% load humanize %}
+
+<div class="space-y-8">
+  <!-- Top Title & Action -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-4xl font-extrabold tracking-tight text-black">
+        Applications
+      </h1>
+      <p class="text-gray-600 text-sm mt-1">
+        Track and manage your active job opportunities.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Filter Button -->
+      <button
+        class="inline-flex items-center gap-2 border border-black rounded-full px-5 py-2 text-sm font-semibold hover:bg-black hover:text-white transition"
+      >
+        <svg
+          class="w-4 h-4 stroke-current"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+          />
+        </svg>
+        Filter
+      </button>
+
+      <!-- Add Application Button -->
+      <button
+        hx-get="{% url 'applications:add_application' %}"
+        hx-target="#drawer-container"
+        hx-swap="innerHTML"
+        class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-5 py-2 text-sm font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+      >
+        <svg
+          class="w-4 h-4 stroke-current"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2.5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        Add Application
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric Stat Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+    <div
+      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+    >
+      <p class="text-xs font-bold uppercase tracking-wider text-black">
+        TOTAL APPLIED
+      </p>
+      <p
+        id="metric-total"
+        class="text-5xl font-black tracking-tight text-black"
+      >
+        {{ metrics.total }}
+      </p>
+    </div>
+    <div
+      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+    >
+      <p class="text-xs font-bold uppercase tracking-wider text-black">
+        APPLIED
+      </p>
+      <p
+        id="metric-applied"
+        class="text-5xl font-black tracking-tight text-black"
+      >
+        {{ metrics.applied }}
+      </p>
+    </div>
+    <div
+      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+    >
+      <p class="text-xs font-bold uppercase tracking-wider text-black">
+        INTERVIEWS
+      </p>
+      <p
+        id="metric-interviewing"
+        class="text-5xl font-black tracking-tight text-black"
+      >
+        {{ metrics.interviewing }}
+      </p>
+    </div>
+    <div
+      class="border-2 border-black rounded-[24px] p-6 flex flex-col justify-between h-36 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+    >
+      <p class="text-xs font-bold uppercase tracking-wider text-black">
+        OFFERS
+      </p>
+      <p
+        id="metric-offer"
+        class="text-5xl font-black tracking-tight text-black"
+      >
+        {{ metrics.offer }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Kanban Board Columns Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-4">
+    {% for column in kanban_columns %}
+    <div class="space-y-4 kanban-column-wrapper">
+      <!-- Column Header -->
+      <div
+        class="flex items-center justify-between pb-3 border-b-2 border-black"
+      >
+        <div class="flex items-center gap-2">
+          <span
+            class="w-2.5 h-2.5 rounded-full {% if column.status_key == 'APPLIED' or column.status_key == 'OFFER' %}bg-black{% else %}border-2 border-black{% endif %}"
+          ></span>
+          <span class="font-bold text-xs tracking-wider uppercase"
+            >{{ column.label }}</span
+          >
+          <span
+            class="border border-black rounded-full px-2 py-0.5 text-xs font-bold col-count"
+          >
+            {{ column.apps|length }}
+          </span>
+        </div>
+        <button
+          class="text-lg leading-none font-bold tracking-widest hover:text-gray-500"
+        >
+          ···
+        </button>
+      </div>
+
+      <!-- Draggable Container -->
+      <div
+        class="kanban-col space-y-4 min-h-[350px] p-1 rounded-2xl bg-gray-50/50"
+        data-status="{{ column.status_key }}"
+      >
+        {% for app in column.apps %}
+        <div
+          class="kanban-card group border-2 border-black rounded-2xl p-4 bg-white space-y-3 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-grab active:cursor-grabbing select-none"
+          data-id="{{ app.id }}"
+          hx-get="{% url 'applications:application_detail_drawer' app.id %}"
+          hx-target="#drawer-container"
+          hx-swap="innerHTML"
+          hx-trigger="click[isCardClick(event)]"
+        >
+          <!-- Top Row: Title, Company & Date -->
+          <div
+            class="flex justify-between items-start gap-2 pointer-events-none"
+          >
+            <div class="min-w-0 flex-1">
+              <h3
+                class="text-base font-bold text-black leading-snug truncate group-hover:text-gray-800"
+              >
+                {{ app.job_title }}
+              </h3>
+              <div
+                class="flex items-center gap-1.5 text-xs text-gray-600 font-medium mt-0.5"
+              >
+                <svg
+                  class="w-3.5 h-3.5 stroke-current shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  />
+                </svg>
+                <span class="truncate">{{ app.company.name }}</span>
+              </div>
+            </div>
+
+            <!-- Date Badge -->
+            <span
+              class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold shrink-0 whitespace-nowrap bg-gray-50"
+            >
+              {% if app.applied_date %} {{ app.applied_date|date:"M d" }} {%
+              else %} {{ app.created_at|timesince }} ago {% endif %}
+            </span>
+          </div>
+
+          <!-- Bottom Row: Meta Badges -->
+          <div
+            class="flex items-center justify-between gap-1.5 pt-1 border-t border-gray-100 pointer-events-none"
+          >
+            <div class="flex items-center gap-1.5 overflow-hidden">
+              {% if app.salary_estimate %}
+              <span
+                class="border border-black rounded-md px-1.5 py-0.5 text-[11px] font-bold bg-white text-black shrink-0"
+              >
+                ${{ app.salary_estimate|floatformat:0 }}
+              </span>
+              {% endif %} {% if app.company.location %}
+              <span
+                class="border border-gray-200 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-gray-700 bg-gray-50 truncate max-w-[100px]"
+              >
+                {{ app.company.location }}
+              </span>
+              {% endif %}
+            </div>
+
+            <span
+              class="text-[10px] font-bold uppercase tracking-wider text-gray-500 shrink-0"
+            >
+              {{ app.get_platform_display }}
+            </span>
+          </div>
+        </div>
+        {% empty %}
+        <div
+          class="empty-placeholder text-center py-8 text-xs text-gray-400 font-semibold border-2 border-dashed border-gray-200 rounded-2xl"
+        >
+          No applications
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Modal Target Container -->
+<div id="drawer-container"></div>
+
+<!-- CSRF Token -->
+{% csrf_token %}
+
+<script>
+  let isDragging = false;
+
+  function isCardClick(event) {
+    return !isDragging;
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function refreshKanbanCounts() {
+    const statusCounts = {
+      APPLIED: 0,
+      INTERVIEWING: 0,
+      OFFER: 0,
+      REJECTED: 0,
+    };
+
+    let totalApplications = 0;
+
+    document.querySelectorAll(".kanban-column-wrapper").forEach((wrapper) => {
+      const col = wrapper.querySelector(".kanban-col");
+      const status = col.getAttribute("data-status");
+      const cards = col.querySelectorAll(".kanban-card");
+      const count = cards.length;
+
+      const countBadge = wrapper.querySelector(".col-count");
+      if (countBadge) countBadge.textContent = count;
+
+      let placeholder = col.querySelector(".empty-placeholder");
+      if (count === 0) {
+        if (!placeholder) {
+          placeholder = document.createElement("div");
+          placeholder.className =
+            "empty-placeholder text-center py-8 text-xs text-gray-400 font-semibold border-2 border-dashed border-gray-200 rounded-2xl";
+          placeholder.textContent = "No applications";
+          col.appendChild(placeholder);
+        }
+      } else if (placeholder) {
+        placeholder.remove();
+      }
+
+      if (status in statusCounts) {
+        statusCounts[status] = count;
+      }
+      totalApplications += count;
+    });
+
+    const totalEl = document.getElementById("metric-total");
+    const appliedEl = document.getElementById("metric-applied");
+    const interviewingEl = document.getElementById("metric-interviewing");
+    const offerEl = document.getElementById("metric-offer");
+
+    if (totalEl) totalEl.textContent = totalApplications;
+    if (appliedEl) appliedEl.textContent = statusCounts.APPLIED;
+    if (interviewingEl) interviewingEl.textContent = statusCounts.INTERVIEWING;
+    if (offerEl) offerEl.textContent = statusCounts.OFFER;
+  }
+
+  function initKanban() {
+    const columns = document.querySelectorAll(".kanban-col");
+    const csrftoken =
+      getCookie("csrftoken") ||
+      document.querySelector("[name=csrfmiddlewaretoken]")?.value;
+
+    columns.forEach((col) => {
+      new Sortable(col, {
+        group: "kanban-board",
+        draggable: ".kanban-card",
+        filter: ".empty-placeholder",
+        animation: 150,
+        ghostClass: "opacity-40",
+        chosenClass: "scale-[1.02]",
+        onStart: function () {
+          isDragging = true;
+        },
+        onEnd: function (evt) {
+          setTimeout(() => {
+            isDragging = false;
+          }, 150);
+
+          if (evt.from !== evt.to) {
+            const cardId = evt.item.getAttribute("data-id");
+            const targetStatus = evt.to.getAttribute("data-status");
+
+            refreshKanbanCounts();
+
+            fetch(`/test/${cardId}/update-status/`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+                "X-Requested-With": "XMLHttpRequest",
+              },
+              body: JSON.stringify({ status: targetStatus }),
+            }).catch((err) => {
+              console.error(err);
+              evt.from.appendChild(evt.item);
+              refreshKanbanCounts();
+            });
+          }
+        },
+      });
+    });
+  }
+
+  initKanban();
+  document.body.addEventListener("htmx:afterSwap", function () {
+    initKanban();
+  });
+
+  function closeDrawerDirect() {
+    const container = document.getElementById("drawer-container");
+    if (container) container.innerHTML = "";
+  }
+
+  function closeDrawer(event) {
+    if (event.target.id === "drawer-backdrop") {
+      closeDrawerDirect();
+    }
+  }
+</script>

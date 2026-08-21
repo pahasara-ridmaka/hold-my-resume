@@ -1,0 +1,74 @@
+<!-- applications/templates/applications/partials/_add_application_drawer.html -->
+<div
+  id="drawer-backdrop"
+  onclick="closeDrawer(event)"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 flex justify-end transition-opacity"
+>
+  <div
+    class="w-full max-w-md bg-white h-full shadow-2xl border-l-2 border-black p-6 overflow-y-auto space-y-6 flex flex-col justify-between"
+    onclick="event.stopPropagation()"
+  >
+    <div class="space-y-6">
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-4 border-b-2 border-black">
+        <div>
+          <h2 class="text-xl font-black tracking-tight text-black">New Application</h2>
+          <p class="text-xs text-gray-500 mt-0.5">Track a new job opportunity</p>
+        </div>
+        <button
+          type="button"
+          onclick="closeDrawerDirect()"
+          class="w-8 h-8 rounded-full border border-black flex items-center justify-center font-bold hover:bg-black hover:text-white transition"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form
+        hx-post="{% url 'applications:add_application' %}"
+        hx-target="#drawer-container"
+        hx-swap="innerHTML"
+        enctype="multipart/form-data"
+        class="space-y-4"
+      >
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="p-3 border border-red-500 bg-red-50 text-red-700 text-xs rounded-xl font-medium">
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        {% for field in form %}
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.errors %}
+          <p class="text-xs text-red-600 mt-1 font-semibold">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        <!-- Drawer Footer Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+          <button
+            type="button"
+            onclick="closeDrawerDirect()"
+            class="border border-black rounded-full px-4 py-2 text-xs font-semibold hover:bg-gray-100 transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="bg-black text-white border border-black rounded-full px-5 py-2 text-xs font-bold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
