@@ -1,0 +1,21 @@
+from django.urls import path
+
+from . import views
+
+app_name = 'applications'
+
+urlpatterns = [
+    path('test/', views.application_list, name='list'),
+    path('test/add/', views.add_application, name='add_application'),
+    path('test/dashboard/', views.dashboard, name='dashboard'),  
+    path(
+            "test/<uuid:pk>/update-status/",
+            views.update_application_status,
+            name="update_application_status",
+        ),
+    path(
+            "test/<uuid:pk>/detail/",
+            views.application_detail_drawer,
+            name="application_detail_drawer",
+        ),
+]
