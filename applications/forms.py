@@ -37,6 +37,7 @@ class ApplicationForm(forms.ModelForm):
             "status",
             "platform",
             "salary_estimate",
+            "applied_date",
             "resume_file",
             "cover_letter_file",
         ]
@@ -61,6 +62,12 @@ class ApplicationForm(forms.ModelForm):
             ),
             "cover_letter_file": forms.ClearableFileInput(
                 attrs={"class": "form-control-file"}
+            ),
+            'applied_date': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'w-full bg-transparent focus:outline-none font-bold text-sm text-black',
+                }
             ),
         }
 

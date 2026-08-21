@@ -1,74 +1,223 @@
 <!-- applications/templates/applications/partials/_add_application_drawer.html -->
-<div
-  id="drawer-backdrop"
+<div 
+  id="drawer-backdrop" 
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end transition-opacity duration-300" 
   onclick="closeDrawer(event)"
-  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 flex justify-end transition-opacity"
 >
-  <div
-    class="w-full max-w-md bg-white h-full shadow-2xl border-l-2 border-black p-6 overflow-y-auto space-y-6 flex flex-col justify-between"
+  <!-- Drawer Panel -->
+  <div 
+    id="drawer-panel" 
+    class="bg-white w-full max-w-2xl h-full border-l-2 border-black flex flex-col shadow-[-8px_0px_0px_0px_rgba(0,0,0,1)] overflow-y-auto transform transition-transform duration-300 translate-x-0" 
     onclick="event.stopPropagation()"
   >
-    <div class="space-y-6">
-      <!-- Drawer Header -->
-      <div class="flex items-center justify-between pb-4 border-b-2 border-black">
-        <div>
-          <h2 class="text-xl font-black tracking-tight text-black">New Application</h2>
-          <p class="text-xs text-gray-500 mt-0.5">Track a new job opportunity</p>
+    <!-- Form Wrapper -->
+    <form
+      hx-post="{% url 'applications:add_application' %}"
+      hx-target="#drawer-container"
+      hx-swap="innerHTML"
+      enctype="multipart/form-data"
+      class="flex flex-col min-h-full"
+    >
+      {% csrf_token %}
+
+      <!-- Header -->
+      <div class="p-8 pb-6 border-b-2 border-black space-y-4 shrink-0 bg-white">
+        <div class="flex justify-between items-start gap-4">
+          <div>
+            <h2 class="text-3xl font-black text-black leading-tight">New Application</h2>
+            <div class="flex items-center gap-2 text-gray-700 font-bold mt-2">
+              <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Track a new job opportunity</span>
+            </div>
+          </div>
+
+          <!-- Close Button -->
+          <button 
+            type="button" 
+            onclick="closeDrawerDirect()" 
+            class="border-2 border-black rounded-full p-2 hover:bg-black hover:text-white transition"
+          >
+            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <button
-          type="button"
-          onclick="closeDrawerDirect()"
-          class="w-8 h-8 rounded-full border border-black flex items-center justify-center font-bold hover:bg-black hover:text-white transition"
-        >
-          ✕
-        </button>
-      </div>
 
-      <!-- Form -->
-      <form
-        hx-post="{% url 'applications:add_application' %}"
-        hx-target="#drawer-container"
-        hx-swap="innerHTML"
-        enctype="multipart/form-data"
-        class="space-y-4"
-      >
-        {% csrf_token %}
-
+        <!-- Non-field Errors -->
         {% if form.non_field_errors %}
-        <div class="p-3 border border-red-500 bg-red-50 text-red-700 text-xs rounded-xl font-medium">
+        <div class="border-2 border-black bg-red-50 text-red-700 text-xs rounded-[16px] p-4 font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
           {{ form.non_field_errors }}
         </div>
         {% endif %}
+      </div>
 
-        {% for field in form %}
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1">
-            {{ field.label }}
-          </label>
-          {{ field }}
-          {% if field.errors %}
-          <p class="text-xs text-red-600 mt-1 font-semibold">{{ field.errors|striptags }}</p>
-          {% endif %}
-        </div>
-        {% endfor %}
+      <!-- Drawer Content / Fields -->
+      <div class="p-8 space-y-8 flex-1">
+        
+        <!-- Section 1: Basic Info -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-black text-black">Role & Company</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Company Name -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white flex flex-col justify-between focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+              <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1" for="{{ form.company_name.id_for_label }}">
+                Company Name *
+              </label>
+              {{ form.company_name }}
+              {% if form.company_name.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.company_name.errors|striptags }}</p>
+              {% endif %}
+            </div>
 
-        <!-- Drawer Footer Buttons -->
-        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-          <button
-            type="button"
-            onclick="closeDrawerDirect()"
-            class="border border-black rounded-full px-4 py-2 text-xs font-semibold hover:bg-gray-100 transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            class="bg-black text-white border border-black rounded-full px-5 py-2 text-xs font-bold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-          >
-            Save
-          </button>
+            <!-- Job Title -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white flex flex-col justify-between focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+              <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1" for="{{ form.job_title.id_for_label }}">
+                Job Title *
+              </label>
+              {{ form.job_title }}
+              {% if form.job_title.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.job_title.errors|striptags }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Job URL -->
+          <div class="border-2 border-black rounded-[20px] p-4 bg-white flex flex-col justify-between focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+            <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1" for="{{ form.job_url.id_for_label }}">
+              Job Posting URL
+            </label>
+            {{ form.job_url }}
+            {% if form.job_url.errors %}
+            <p class="text-xs text-red-600 font-bold mt-1">{{ form.job_url.errors|striptags }}</p>
+            {% endif %}
+          </div>
         </div>
-      </form>
-    </div>
+
+        <!-- Section 2: Status & Meta -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-black text-black">Application Details</h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Status -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white flex flex-col justify-between focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+              <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1" for="{{ form.status.id_for_label }}">
+                Status
+              </label>
+              {{ form.status }}
+              {% if form.status.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.status.errors|striptags }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Platform -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white flex flex-col justify-between focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+              <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1" for="{{ form.platform.id_for_label }}">
+                Platform
+              </label>
+              {{ form.platform }}
+              {% if form.platform.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.platform.errors|striptags }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Salary Estimate -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white flex flex-col justify-between focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+              <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1" for="{{ form.salary_estimate.id_for_label }}">
+                Salary Estimate ($)
+              </label>
+              {{ form.salary_estimate }}
+              {% if form.salary_estimate.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.salary_estimate.errors|striptags }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Applied Date -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white flex flex-col justify-between focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+              <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1" for="{{ form.applied_date.id_for_label }}">
+                Applied Date
+              </label>
+              {{ form.applied_date }}
+              {% if form.applied_date.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.applied_date.errors|striptags }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Job Description -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-black text-black">Role Summary & Notes</h3>
+          <div class="border-2 border-black rounded-[20px] p-4 bg-white focus-within:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
+            <label class="text-[10px] font-black uppercase text-gray-500 tracking-wider mb-1 block" for="{{ form.job_description.id_for_label }}">
+              Job Description
+            </label>
+            {{ form.job_description }}
+            {% if form.job_description.errors %}
+            <p class="text-xs text-red-600 font-bold mt-1">{{ form.job_description.errors|striptags }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Section 4: Documents -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-black text-black">Attached Documents</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Resume Upload -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white space-y-2">
+              <div class="flex items-center gap-2">
+                <div class="p-1.5 border-2 border-black rounded-lg">
+                  <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <label class="text-xs font-bold text-black" for="{{ form.resume_file.id_for_label }}">Resume</label>
+              </div>
+              {{ form.resume_file }}
+              {% if form.resume_file.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.resume_file.errors|striptags }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Cover Letter Upload -->
+            <div class="border-2 border-black rounded-[20px] p-4 bg-white space-y-2">
+              <div class="flex items-center gap-2">
+                <div class="p-1.5 border-2 border-black rounded-lg">
+                  <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <label class="text-xs font-bold text-black" for="{{ form.cover_letter_file.id_for_label }}">Cover Letter</label>
+              </div>
+              {{ form.cover_letter_file }}
+              {% if form.cover_letter_file.errors %}
+              <p class="text-xs text-red-600 font-bold mt-1">{{ form.cover_letter_file.errors|striptags }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Footer -->
+      <div class="p-8 py-6 border-t-2 border-black flex items-center justify-end gap-4 bg-white shrink-0">
+        <button
+          type="button"
+          onclick="closeDrawerDirect()"
+          class="border-2 border-black rounded-full px-6 py-2.5 text-sm font-bold hover:bg-gray-100 transition"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="bg-black text-white border-2 border-black rounded-full px-8 py-2.5 text-sm font-bold hover:bg-gray-800 transition shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+        >
+          Save Application
+        </button>
+      </div>
+
+    </form>
   </div>
 </div>
