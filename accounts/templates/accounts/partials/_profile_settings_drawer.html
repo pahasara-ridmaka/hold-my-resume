@@ -1,0 +1,150 @@
+<!-- Left Drawer Backdrop -->
+<div 
+  id="drawer-backdrop" 
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-start transition-opacity duration-300" 
+  onclick="closeDrawer(event)"
+>
+  <!-- Left Drawer Panel -->
+  <div 
+    id="drawer-panel" 
+    class="bg-white w-full max-w-xl h-full border-r border-black/15 flex flex-col shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-0" 
+    onclick="event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="p-6 sm:p-8 pb-5 border-b border-black/10 flex justify-between items-start">
+      <div>
+        <h2 class="text-2xl font-extrabold tracking-tight text-black">Edit Profile</h2>
+        <p class="text-xs text-neutral-500 mt-1">Update your personal information and public profile</p>
+      </div>
+
+      <!-- Close Button -->
+      <button 
+        type="button" 
+        onclick="closeDrawerDirect()" 
+        class="border border-black/20 rounded-full p-2 text-gray-500 hover:text-black hover:border-black transition"
+      >
+        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <form 
+      hx-post="{% url 'accounts:edit_profile' %}" 
+      hx-target="#drawer-container" 
+      enctype="multipart/form-data" 
+      class="flex-1 flex flex-col justify-between"
+    >
+      {% csrf_token %}
+
+      <div class="p-6 sm:p-8 space-y-6 flex-1">
+        <!-- Profile Picture Upload -->
+        <div class="flex items-center gap-4 p-4 border border-black/10 rounded-2xl bg-neutral-50/50">
+          <div class="w-16 h-16 rounded-full border-2 border-black bg-neutral-200 overflow-hidden shrink-0 flex items-center justify-center">
+            {% if user.profile.avatar %}
+              <img id="avatar-preview" src="{{ user.profile.avatar.url }}" alt="Avatar" class="w-full h-full object-cover">
+            {% else %}
+              <span class="text-lg font-black text-neutral-600">{{ user.first_name|first|default:user.username|first|upper }}</span>
+            {% endif %}
+          </div>
+          <div class="space-y-1">
+            <label class="inline-flex items-center gap-2 border border-black rounded-full px-3 py-1 text-xs font-semibold hover:bg-black hover:text-white transition cursor-pointer">
+              <span>Change Photo</span>
+              <input type="file" name="avatar" accept="image/*" class="hidden">
+            </label>
+            <p class="text-[11px] text-neutral-400">JPG, PNG or WEBP. Max 2MB.</p>
+          </div>
+        </div>
+
+        <!-- Name Inputs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">First Name</label>
+            <input 
+              type="text" 
+              name="first_name" 
+              value="{{ user.first_name|default:'' }}" 
+              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+              required
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Last Name</label>
+            <input 
+              type="text" 
+              name="last_name" 
+              value="{{ user.last_name|default:'' }}" 
+              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Email & Headline -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Email Address</label>
+            <input 
+              type="email" 
+              name="email" 
+              value="{{ user.email|default:'' }}" 
+              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+              required
+            >
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Professional Headline</label>
+            <input 
+              type="text" 
+              name="headline" 
+              value="{{ user.profile.headline|default:'' }}" 
+              placeholder="e.g. Full Stack Developer | React & Django" 
+              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition"
+            >
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Location</label>
+            <input 
+              type="text" 
+              name="location" 
+              value="{{ user.profile.location|default:'' }}" 
+              placeholder="e.g. Colombo, Sri Lanka" 
+              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition"
+            >
+          </div>
+
+          <!-- Bio -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Bio</label>
+            <textarea 
+              name="bio" 
+              rows="3" 
+              placeholder="Tell a brief summary about yourself..." 
+              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition resize-none"
+            >{{ user.profile.bio|default:'' }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="p-6 sm:p-8 border-t border-black/10 flex justify-end items-center gap-3 bg-neutral-50/50">
+        <button 
+          type="button" 
+          onclick="closeDrawerDirect()" 
+          class="px-4 py-2 border border-black/20 rounded-full text-xs font-semibold hover:border-black transition"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="px-5 py-2 bg-black text-white border border-black rounded-full text-xs font-semibold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-neutral-800 transition"
+        >
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
