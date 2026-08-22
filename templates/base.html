@@ -1,95 +1,390 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CareerTrack</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-    <Link rel='stylesheet' href="{% static "css/drawer.css" %}" />
-</head>
-<body class="flex h-screen bg-white text-black overflow-hidden">
-
+    <link rel="stylesheet" href="{% static 'css/drawer.css' %}" />
+  </head>
+  <body
+    class="flex h-screen bg-neutral-100/60 text-black overflow-hidden font-sans antialiased"
+  >
     <!-- Collapsible Sidebar -->
-    <aside id="sidebar" class="w-64 border-r border-black p-4 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0">
-        <div class="space-y-6">
-            <!-- Header & Toggle Button -->
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 overflow-hidden">
-                    <div class="w-8 h-8 rounded-full border-2 border-black flex items-center justify-center font-bold text-xs shrink-0">CT</div>
-                    <h1 class="text-xl font-bold tracking-tight sidebar-label whitespace-nowrap">CareerTrack</h1>
-                </div>
-                <button onclick="toggleSidebar()" class="p-1.5 rounded-lg border border-black hover:bg-gray-100 transition" title="Toggle Sidebar">
-                    <svg id="toggle-icon" class="w-4 h-4 stroke-black transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                    </svg>
-                </button>
+    <aside
+      id="sidebar"
+      class="w-64 bg-white border-r border-black/15 p-4 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 select-none shadow-[1px_0px_0px_0px_rgba(0,0,0,0.05)]"
+    >
+      <div class="space-y-6">
+        <!-- Header (Logo + Toggle) -->
+        <div
+          id="sidebar-header"
+          class="flex items-center justify-between transition-all"
+        >
+          <div class="flex items-center gap-3 overflow-hidden">
+            <div
+              id="sidebar-logo"
+              class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-black text-xs shrink-0 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            >
+              CT
             </div>
-
-            <!-- Navigation Links -->
-            <nav class="space-y-2">
-                <a href="{% url 'applications:dashboard' %}" 
-                   hx-get="{% url 'applications:dashboard' %}" 
-                   hx-target="#main-content" 
-                   hx-push-url="true"
-                   class="flex items-center gap-3 p-2.5 rounded-xl border border-black hover:bg-black hover:text-white transition group">
-                    <svg class="w-5 h-5 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                    </svg>
-                    <span class="font-bold text-sm sidebar-label whitespace-nowrap">Dashboard</span>
-                </a>
-
-                <a href="{% url 'applications:list' %}" 
-                   hx-get="{% url 'applications:list' %}" 
-                   hx-target="#main-content" 
-                   hx-push-url="true"
-                   class="flex items-center gap-3 p-2.5 rounded-xl border border-black hover:bg-black hover:text-white transition group">
-                    <svg class="w-5 h-5 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
-                    <span class="font-bold text-sm sidebar-label whitespace-nowrap">Applications</span>
-                </a>
-            </nav>
+            <span
+              class="text-lg font-black tracking-tight sidebar-label whitespace-nowrap"
+            >
+              CareerTrack
+            </span>
+          </div>
+          <button
+            onclick="toggleSidebar()"
+            class="p-1.5 rounded-lg border border-black/20 hover:border-black hover:bg-neutral-100 transition active:scale-95 shrink-0"
+            title="Toggle Sidebar"
+          >
+            <svg
+              id="toggle-icon"
+              class="w-3.5 h-3.5 stroke-black transform transition-transform duration-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+              />
+            </svg>
+          </button>
         </div>
 
-        <!-- User Section at Bottom -->
-        <div class="border-t border-black pt-4 flex items-center gap-3 overflow-hidden">
-            <div class="w-8 h-8 rounded-full border border-black flex items-center justify-center font-bold text-xs shrink-0">AM</div>
-            <div class="sidebar-label whitespace-nowrap">
-                <p class="font-bold text-xs">Alex Morgan</p>
-                <p class="text-[10px] text-gray-500">Product Designer</p>
-            </div>
+        <!-- Navigation Links -->
+        <nav id="sidebar-nav" class="space-y-1.5">
+          <!-- Applications Link -->
+          <a
+            href="{% url 'applications:list' %}"
+            hx-get="{% url 'applications:list' %}"
+            hx-target="#main-content"
+            hx-push-url="true"
+            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold border transition group"
+          >
+            <svg
+              class="w-4 h-4 stroke-current shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+              />
+            </svg>
+            <span class="sidebar-label whitespace-nowrap">Applications</span>
+          </a>
+
+          <!-- Analytics Link -->
+          <a
+            href="{% url 'applications:analytics' %}"
+            hx-get="{% url 'applications:analytics' %}"
+            hx-target="#main-content"
+            hx-push-url="true"
+            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold border transition group"
+          >
+            <svg
+              class="w-4 h-4 stroke-current shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+              />
+            </svg>
+            <span class="sidebar-label whitespace-nowrap">Analytics</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- User Profile & Context Menu Wrapper -->
+      <div class="relative">
+        <!-- Context Popup Menu -->
+        <div
+          id="user-context-menu"
+          class="hidden absolute bottom-full left-0 mb-2 w-full bg-white border-2 border-black rounded-2xl p-1.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] z-50 transition-all"
+        >
+          <div class="space-y-1">
+            <a
+              href="#"
+              class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-black rounded-xl hover:bg-neutral-100 transition"
+            >
+              <svg
+                class="w-4 h-4 stroke-current shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              <span>Settings</span>
+            </a>
+
+            <form
+              method="POST"
+              action="{% url 'logout' %}"
+              class="w-full m-0 p-0"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left"
+              >
+                <svg
+                  class="w-4 h-4 stroke-current shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                  />
+                </svg>
+                <span>Sign Out</span>
+              </button>
+            </form>
+          </div>
         </div>
+
+        <!-- User Card Button -->
+        <div
+          id="user-card"
+          onclick="toggleUserMenu(event)"
+          class="border border-black/10 hover:border-black rounded-xl p-2 bg-neutral-50/70 hover:bg-neutral-100/80 flex items-center justify-between cursor-pointer transition-all select-none"
+        >
+          <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
+            {% if user.is_authenticated %}
+            <!-- Avatar -->
+            <div
+              class="w-8 h-8 rounded-lg bg-neutral-900 text-white border border-black/10 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden"
+            >
+              {% if user.first_name and user.last_name %}{{
+              user.first_name|first|upper }}{{ user.last_name|first|upper }}{%
+              else %}{{ user.username|slice:":2"|upper }}{% endif %}
+            </div>
+
+            <!-- Name & Subtext -->
+            <div class="sidebar-label whitespace-nowrap min-w-0">
+              <p class="font-bold text-xs text-black leading-tight truncate">
+                {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{
+                user.username }}{% endif %}
+              </p>
+              <p class="text-[10px] font-medium text-neutral-500 truncate">
+                Account
+              </p>
+            </div>
+            {% else %}
+            <!-- Guest State -->
+            <div
+              class="w-8 h-8 rounded-lg bg-neutral-200 border border-black/10 flex items-center justify-center font-bold text-xs text-neutral-700 shrink-0"
+            >
+              G
+            </div>
+            <div class="sidebar-label whitespace-nowrap min-w-0">
+              <p class="font-bold text-xs text-black leading-tight truncate">
+                Guest User
+              </p>
+              <a
+                href="{% url 'login' %}"
+                class="text-[10px] font-semibold text-blue-600 hover:underline truncate"
+                >Sign In</a
+              >
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- 3 Dots Icon -->
+          <svg
+            class="w-3.5 h-3.5 stroke-neutral-400 sidebar-label shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+            />
+          </svg>
+        </div>
+      </div>
     </aside>
 
     <!-- Main Dynamic Area -->
-    <main id="main-content" class="flex-1 p-8 overflow-y-auto">
-        {% block content %}
-        {% endblock %}
+    <main id="main-content" class="flex-1 bg-white p-8 overflow-y-auto">
+      {% block content %} {% endblock %}
     </main>
 
-    <!-- Sidebar Toggle JS -->
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const labels = document.querySelectorAll('.sidebar-label');
-            const toggleIcon = document.getElementById('toggle-icon');
+      // Classes Definitions
+      const activeClasses = [
+        "bg-black",
+        "text-white",
+        "border-black",
+        "shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]",
+      ];
+      const inactiveClasses = [
+        "text-neutral-600",
+        "border-transparent",
+        "hover:border-black",
+        "hover:text-black",
+        "hover:bg-neutral-50",
+      ];
 
-            if (sidebar.classList.contains('w-64')) {
-                // Collapse to icon-only view
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20');
-                labels.forEach(el => el.classList.add('hidden'));
-                toggleIcon.classList.add('rotate-180');
-            } else {
-                // Expand to full view
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64');
-                labels.forEach(el => el.classList.remove('hidden'));
-                toggleIcon.classList.remove('rotate-180');
-            }
+      function updateActiveNav(activeElement) {
+        const navItems = document.querySelectorAll(".nav-item");
+        navItems.forEach((item) => {
+          item.classList.remove(...activeClasses);
+          item.classList.add(...inactiveClasses);
+        });
+
+        if (activeElement) {
+          activeElement.classList.remove(...inactiveClasses);
+          activeElement.classList.add(...activeClasses);
         }
+      }
+
+      // Set active state based on Current Browser URL
+      function syncNavWithURL() {
+        const currentPath = window.location.pathname;
+        const navItems = document.querySelectorAll(".nav-item");
+        let matched = false;
+
+        navItems.forEach((item) => {
+          const itemHref = item.getAttribute("href");
+          if (
+            itemHref &&
+            currentPath.startsWith(itemHref) &&
+            itemHref !== "/"
+          ) {
+            updateActiveNav(item);
+            matched = true;
+          }
+        });
+
+        if (!matched && navItems.length > 0) {
+          updateActiveNav(navItems[0]); // Default first item
+        }
+      }
+
+      // Click handler for Nav Links
+      document.querySelectorAll(".nav-item").forEach((link) => {
+        link.addEventListener("click", function () {
+          updateActiveNav(this);
+        });
+      });
+
+      // Sync state when browser back/forward or HTMX push-url occurs
+      window.addEventListener("popstate", syncNavWithURL);
+      document.addEventListener("DOMContentLoaded", syncNavWithURL);
+
+      // Sidebar Toggle Script
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const labels = document.querySelectorAll(".sidebar-label");
+        const toggleIcon = document.getElementById("toggle-icon");
+        const logo = document.getElementById("sidebar-logo");
+        const header = document.getElementById("sidebar-header");
+        const navItems = document.querySelectorAll(".nav-item");
+        const userCard = document.getElementById("user-card");
+
+        if (sidebar.classList.contains("w-64")) {
+          sidebar.classList.remove("w-64");
+          sidebar.classList.add("w-16", "p-2");
+          sidebar.classList.remove("p-4");
+
+          labels.forEach((el) => el.classList.add("hidden"));
+          logo.classList.add("hidden");
+          header.classList.add("justify-center");
+          header.classList.remove("justify-between");
+
+          navItems.forEach((item) => {
+            item.classList.add("justify-center", "px-0");
+            item.classList.remove("px-3", "gap-3");
+          });
+
+          userCard.classList.add(
+            "justify-center",
+            "p-1",
+            "border-transparent",
+            "bg-transparent",
+          );
+          userCard.classList.remove(
+            "p-2",
+            "bg-neutral-50/70",
+            "border-black/10",
+          );
+
+          toggleIcon.classList.add("rotate-180");
+        } else {
+          sidebar.classList.remove("w-16", "p-2");
+          sidebar.classList.add("w-64", "p-4");
+
+          labels.forEach((el) => el.classList.remove("hidden"));
+          logo.classList.remove("hidden");
+          header.classList.add("justify-between");
+          header.classList.remove("justify-center");
+
+          navItems.forEach((item) => {
+            item.classList.remove("justify-center", "px-0");
+            item.classList.add("px-3", "gap-3");
+          });
+
+          userCard.classList.remove(
+            "justify-center",
+            "p-1",
+            "border-transparent",
+            "bg-transparent",
+          );
+          userCard.classList.add("p-2", "bg-neutral-50/70", "border-black/10");
+
+          toggleIcon.classList.remove("rotate-180");
+        }
+      }
+
+      {% comment %} ----------------- USER MENU ------------------------------------ {% endcomment %}
+
+      function toggleUserMenu(event) {
+        event.stopPropagation();
+        const menu = document.getElementById("user-context-menu");
+        menu.classList.toggle("hidden");
+      }
+
+      // Click outside to close context menu
+      document.addEventListener("click", function (e) {
+        const menu = document.getElementById("user-context-menu");
+        const userCard = document.getElementById("user-card");
+        if (
+          menu &&
+          !menu.classList.contains("hidden") &&
+          !menu.contains(e.target) &&
+          !userCard.contains(e.target)
+        ) {
+          menu.classList.add("hidden");
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
