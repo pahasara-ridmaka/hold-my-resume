@@ -1,0 +1,253 @@
+<!-- applications/templates/applications/partials/_analytics_content.html -->
+<div class="space-y-6">
+  <!-- Header & Controls -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-black">
+        Analytics
+      </h1>
+      <p class="text-gray-500 text-xs mt-0.5">
+        Performance metrics and conversion insights across your job search.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Timeframe Filter -->
+      <button class="inline-flex items-center gap-2 border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-black hover:text-white transition">
+        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        Last 30 Days
+      </button>
+
+      <!-- Export Report -->
+      <button class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Export Report
+      </button>
+    </div>
+  </div>
+
+  <!-- Key Metrics Stat Strip -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 border border-black/15 bg-neutral-50/70 rounded-xl divide-y sm:divide-y-0 sm:divide-x divide-black/10 overflow-hidden">
+    <!-- Response Rate -->
+    <div class="p-3.5 px-5">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Response Rate</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span class="text-2xl font-black tracking-tight text-black">28.4%</span>
+        <span class="text-[11px] text-emerald-600 font-bold">+4.2%</span>
+      </div>
+    </div>
+
+    <!-- Interview Rate -->
+    <div class="p-3.5 px-5">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Interview Rate</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span class="text-2xl font-black tracking-tight text-black">14.8%</span>
+        <span class="text-[11px] text-neutral-400 font-medium">avg 12d</span>
+      </div>
+    </div>
+
+    <!-- Offer Conversion -->
+    <div class="p-3.5 px-5">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Offer Rate</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span class="text-2xl font-black tracking-tight text-black">4.5%</span>
+        <span class="text-[11px] text-emerald-600 font-medium">1 secured</span>
+      </div>
+    </div>
+
+    <!-- Average Salary Target -->
+    <div class="p-3.5 px-5 border-t sm:border-t-0">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-black"></span>
+        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Avg Target</span>
+      </div>
+      <div class="flex items-baseline gap-1.5 mt-0.5">
+        <span class="text-2xl font-black tracking-tight text-black">$124k</span>
+        <span class="text-[11px] text-neutral-400 font-medium">/ year</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Detailed Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+    
+    <!-- Application Funnel (2 Columns Wide) -->
+    <div class="md:col-span-2 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b-2 border-black">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full border border-black bg-blue-500"></span>
+          <span class="font-bold text-xs tracking-wider uppercase">Conversion Funnel</span>
+          <span class="border border-black rounded-full px-2 py-0.5 text-xs font-bold bg-white">4 Stages</span>
+        </div>
+      </div>
+
+      <div class="border-2 border-black rounded-2xl p-5 bg-white space-y-4">
+        <!-- Stage 1 -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-bold">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span> Applied
+            </span>
+            <span class="text-neutral-500">42 total (100%)</span>
+          </div>
+          <div class="w-full h-3 bg-neutral-100 rounded-full overflow-hidden border border-black/10">
+            <div class="h-full bg-blue-500 rounded-full" style="width: 100%"></div>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-bold">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span> Interview Screening
+            </span>
+            <span class="text-neutral-500">12 reached (28.5%)</span>
+          </div>
+          <div class="w-full h-3 bg-neutral-100 rounded-full overflow-hidden border border-black/10">
+            <div class="h-full bg-amber-400 rounded-full" style="width: 28.5%"></div>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-bold">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-purple-500"></span> Technical / Final Round
+            </span>
+            <span class="text-neutral-500">5 reached (11.9%)</span>
+          </div>
+          <div class="w-full h-3 bg-neutral-100 rounded-full overflow-hidden border border-black/10">
+            <div class="h-full bg-purple-500 rounded-full" style="width: 11.9%"></div>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-bold">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Offers Extended
+            </span>
+            <span class="text-neutral-500">2 secured (4.7%)</span>
+          </div>
+          <div class="w-full h-3 bg-neutral-100 rounded-full overflow-hidden border border-black/10">
+            <div class="h-full bg-emerald-500 rounded-full" style="width: 4.7%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Sources Breakdown -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b-2 border-black">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full border border-black bg-black"></span>
+          <span class="font-bold text-xs tracking-wider uppercase">Top Sources</span>
+        </div>
+      </div>
+
+      <div class="border-2 border-black rounded-2xl p-4 bg-gray-50/50 space-y-3">
+        <!-- Platform item -->
+        <div class="flex items-center justify-between p-3 rounded-xl border border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div>
+            <p class="font-bold text-xs">LinkedIn</p>
+            <p class="text-[10px] text-gray-500 font-medium mt-0.5">24 Applications</p>
+          </div>
+          <span class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold bg-blue-50/60 text-blue-700">
+            57%
+          </span>
+        </div>
+
+        <!-- Platform item -->
+        <div class="flex items-center justify-between p-3 rounded-xl border border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div>
+            <p class="font-bold text-xs">Wellfound / AngelList</p>
+            <p class="text-[10px] text-gray-500 font-medium mt-0.5">11 Applications</p>
+          </div>
+          <span class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold bg-amber-50/60 text-amber-700">
+            26%
+          </span>
+        </div>
+
+        <!-- Platform item -->
+        <div class="flex items-center justify-between p-3 rounded-xl border border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div>
+            <p class="font-bold text-xs">Company Direct</p>
+            <p class="text-[10px] text-gray-500 font-medium mt-0.5">7 Applications</p>
+          </div>
+          <span class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold bg-emerald-50/60 text-emerald-700">
+            17%
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Weekly Activity Timeline Row -->
+  <div class="space-y-4 pt-2">
+    <div class="flex items-center justify-between pb-3 border-b-2 border-black">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full border border-black bg-amber-400"></span>
+        <span class="font-bold text-xs tracking-wider uppercase">Application Cadence (Past 7 Days)</span>
+      </div>
+    </div>
+
+    <div class="border-2 border-black rounded-2xl p-5 bg-white grid grid-cols-7 gap-2 text-center">
+      <div class="space-y-2">
+        <div class="h-20 bg-neutral-50 rounded-xl flex items-end justify-center p-1 border border-black/10">
+          <div class="w-full bg-black rounded-lg" style="height: 40%"></div>
+        </div>
+        <span class="text-[10px] font-bold uppercase text-neutral-400">Mon</span>
+      </div>
+      <div class="space-y-2">
+        <div class="h-20 bg-neutral-50 rounded-xl flex items-end justify-center p-1 border border-black/10">
+          <div class="w-full bg-black rounded-lg" style="height: 75%"></div>
+        </div>
+        <span class="text-[10px] font-bold uppercase text-neutral-400">Tue</span>
+      </div>
+      <div class="space-y-2">
+        <div class="h-20 bg-neutral-50 rounded-xl flex items-end justify-center p-1 border border-black/10">
+          <div class="w-full bg-black rounded-lg" style="height: 100%"></div>
+        </div>
+        <span class="text-[10px] font-bold uppercase text-neutral-400">Wed</span>
+      </div>
+      <div class="space-y-2">
+        <div class="h-20 bg-neutral-50 rounded-xl flex items-end justify-center p-1 border border-black/10">
+          <div class="w-full bg-black rounded-lg" style="height: 50%"></div>
+        </div>
+        <span class="text-[10px] font-bold uppercase text-neutral-400">Thu</span>
+      </div>
+      <div class="space-y-2">
+        <div class="h-20 bg-neutral-50 rounded-xl flex items-end justify-center p-1 border border-black/10">
+          <div class="w-full bg-black rounded-lg" style="height: 20%"></div>
+        </div>
+        <span class="text-[10px] font-bold uppercase text-neutral-400">Fri</span>
+      </div>
+      <div class="space-y-2">
+        <div class="h-20 bg-neutral-50 rounded-xl flex items-end justify-center p-1 border border-black/10">
+          <div class="w-full bg-neutral-300 rounded-lg" style="height: 10%"></div>
+        </div>
+        <span class="text-[10px] font-bold uppercase text-neutral-400">Sat</span>
+      </div>
+      <div class="space-y-2">
+        <div class="h-20 bg-neutral-50 rounded-xl flex items-end justify-center p-1 border border-black/10">
+          <div class="w-full bg-neutral-300 rounded-lg" style="height: 15%"></div>
+        </div>
+        <span class="text-[10px] font-bold uppercase text-neutral-400">Sun</span>
+      </div>
+    </div>
+  </div>
+</div>

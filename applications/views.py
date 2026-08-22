@@ -114,9 +114,9 @@ def application_list(request):
     return render_htmx(request, 'applications/partials/_application_content.html', context=context)
 
 
-def dashboard(request):
+def analytic(request):
     context = {'stats': ...}
-    return render_htmx(request, 'applications/partials/_dashboard_content.html', context=context)
+    return render_htmx(request, 'applications/partials/_analytic_content.html', context=context)
 
 
 @login_required
