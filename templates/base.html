@@ -108,128 +108,78 @@
         </nav>
       </div>
 
-      <!-- User Profile & Context Menu Wrapper -->
-      <div class="relative">
-        <!-- Context Popup Menu -->
-        <div
-          id="user-context-menu"
-          class="hidden absolute bottom-full left-0 mb-2 w-full bg-white border-2 border-black rounded-2xl p-1.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] z-50 transition-all"
+<!-- User Profile & Context Menu Wrapper -->
+<div class="relative">
+  <!-- Context Popup Menu -->
+  <div
+    id="user-context-menu"
+    class="hidden absolute bottom-full left-0 mb-2 w-full bg-white border-2 border-black rounded-2xl p-1.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] z-50 transition-all"
+  >
+    <div class="space-y-1">
+      <a
+        href="#"
+        class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-black rounded-xl hover:bg-neutral-100 transition"
+      >
+        <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span>Settings</span>
+      </a>
+
+      <form method="POST" action="{% url 'logout' %}" class="w-full m-0 p-0">
+        {% csrf_token %}
+        <button
+          type="submit"
+          class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left"
         >
-          <div class="space-y-1">
-            <a
-              href="#"
-              class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-black rounded-xl hover:bg-neutral-100 transition"
-            >
-              <svg
-                class="w-4 h-4 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              <span>Settings</span>
-            </a>
-
-            <form
-              method="POST"
-              action="{% url 'logout' %}"
-              class="w-full m-0 p-0"
-            >
-              {% csrf_token %}
-              <button
-                type="submit"
-                class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left"
-              >
-                <svg
-                  class="w-4 h-4 stroke-current shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
-                  />
-                </svg>
-                <span>Sign Out</span>
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <!-- User Card Button -->
-        <div
-          id="user-card"
-          onclick="toggleUserMenu(event)"
-          class="border border-black/10 hover:border-black rounded-xl p-2 bg-neutral-50/70 hover:bg-neutral-100/80 flex items-center justify-between cursor-pointer transition-all select-none"
-        >
-          <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
-            {% if user.is_authenticated %}
-            <!-- Avatar -->
-            <div
-              class="w-8 h-8 rounded-lg bg-neutral-900 text-white border border-black/10 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden"
-            >
-              {% if user.first_name and user.last_name %}{{
-              user.first_name|first|upper }}{{ user.last_name|first|upper }}{%
-              else %}{{ user.username|slice:":2"|upper }}{% endif %}
-            </div>
-
-            <!-- Name & Subtext -->
-            <div class="sidebar-label whitespace-nowrap min-w-0">
-              <p class="font-bold text-xs text-black leading-tight truncate">
-                {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{
-                user.username }}{% endif %}
-              </p>
-              <p class="text-[10px] font-medium text-neutral-500 truncate">
-                Account
-              </p>
-            </div>
-            {% else %}
-            <!-- Guest State -->
-            <div
-              class="w-8 h-8 rounded-lg bg-neutral-200 border border-black/10 flex items-center justify-center font-bold text-xs text-neutral-700 shrink-0"
-            >
-              G
-            </div>
-            <div class="sidebar-label whitespace-nowrap min-w-0">
-              <p class="font-bold text-xs text-black leading-tight truncate">
-                Guest User
-              </p>
-              <a
-                href="{% url 'login' %}"
-                class="text-[10px] font-semibold text-blue-600 hover:underline truncate"
-                >Sign In</a
-              >
-            </div>
-            {% endif %}
-          </div>
-
-          <!-- 3 Dots Icon -->
-          <svg
-            class="w-3.5 h-3.5 stroke-neutral-400 sidebar-label shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
-            />
+          <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
           </svg>
+          <span>Sign Out</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Card Button -->
+  <div
+    id="user-card"
+    onclick="toggleUserMenu(event)"
+    class="border border-black/10 hover:border-black rounded-xl p-2 bg-neutral-50/70 hover:bg-neutral-100/80 flex items-center justify-between cursor-pointer transition-all select-none"
+  >
+    <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
+      {% if user.is_authenticated %}
+        <!-- Avatar -->
+        <div class="w-8 h-8 rounded-lg bg-neutral-900 text-white border border-black/10 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+          {% if user.first_name and user.last_name %}{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}{% else %}{{ user.username|slice:":2"|upper }}{% endif %}
         </div>
-      </div>
+
+        <!-- Name & Subtext -->
+        <div class="sidebar-label whitespace-nowrap min-w-0">
+          <p class="font-bold text-xs text-black leading-tight truncate">
+            {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
+          </p>
+          <p class="text-[10px] font-medium text-neutral-500 truncate">Account</p>
+        </div>
+      {% else %}
+        <!-- Guest State -->
+        <div class="w-8 h-8 rounded-lg bg-neutral-200 border border-black/10 flex items-center justify-center font-bold text-xs text-neutral-700 shrink-0">
+          G
+        </div>
+        <div class="sidebar-label whitespace-nowrap min-w-0">
+          <p class="font-bold text-xs text-black leading-tight truncate">Guest User</p>
+          <a href="{% url 'login' %}" class="text-[10px] font-semibold text-blue-600 hover:underline truncate">Sign In</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- 3 Dots Icon -->
+    <svg class="w-3.5 h-3.5 stroke-neutral-400 sidebar-label shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+    </svg>
+  </div>
+</div>
     </aside>
 
     <!-- Main Dynamic Area -->
