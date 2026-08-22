@@ -7,7 +7,7 @@ app_name = 'applications'
 urlpatterns = [
     path('test/', views.application_list, name='list'),
     path('test/add/', views.add_application, name='add_application'),
-    path('test/dashboard/', views.dashboard, name='dashboard'),  
+    path('test/analytics/', views.dashboard, name='analytics'),  
     path(
             "test/<uuid:pk>/update-status/",
             views.update_application_status,
