@@ -40,7 +40,7 @@ def add_application(request):
     return render(request, "applications/add_application.html", {"form": form})
 
 
-
+@login_required
 def application_list(request):
     user_apps = Application.objects.filter(user=request.user).select_related(
         'company'
