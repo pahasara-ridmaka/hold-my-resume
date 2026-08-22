@@ -1,7 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
+
+from .forms import ProfileUpdateForm
 
 
 def auth_view(request):
@@ -47,3 +51,32 @@ def auth_view(request):
                 return redirect('applications:list')
 
     return render(request, 'accounts/auth.html')
+
+@login_required
+def profile_settings(request):
+    user = request.user
+
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            
+            if request.headers.get("HX-Request"):
+                response = HttpResponse()
+                response["HX-Refresh"] = "true"
+                return response
+
+            messages.success(request, "Profile updated successfully.")
+            return redirect("accounts:profile_settings")
+    else:
+        form = ProfileUpdateForm(instance=user)
+
+    context = {
+        "form": form,
+        "user": user,
+    }
+
+    if request.headers.get("HX-Request"):
+        return render(request, "accounts/partials/_profile_settings_drawer.html", context)
+
+    return render(request, "accounts/profile_settings.html", context)
