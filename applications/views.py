@@ -39,6 +39,45 @@ def add_application(request):
 
     return render(request, "applications/add_application.html", {"form": form})
 
+@login_required
+def edit_details(request, pk):
+    application = get_object_or_404(Application, pk=pk, user=request.user)
+
+    if request.method == "POST":
+        form = ApplicationForm(request.POST, request.FILES, instance=application)
+
+        if form.is_valid():
+            comp_name = form.cleaned_data.get("company_name", "").strip()
+            if comp_name:
+                company, _ = Company.objects.get_or_create(name=comp_name)
+                application.company = company
+
+            form.save()
+
+            if request.headers.get("HX-Request"):
+                response = HttpResponse()
+                response["HX-Refresh"] = "true"
+                return response
+
+            return redirect("applications:list")
+
+    else:
+        initial_data = {}
+        if application.company:
+            initial_data["company_name"] = application.company.name
+
+        form = ApplicationForm(instance=application, initial=initial_data)
+
+    context = {
+        "form": form,
+        "app": application,
+    }
+
+    if request.headers.get("HX-Request"):
+        return render(request, "applications/partials/_edit_application_drawer.html", context)
+
+    return render(request, "applications/edit_application.html", context)
+
 
 @login_required
 def application_list(request):
