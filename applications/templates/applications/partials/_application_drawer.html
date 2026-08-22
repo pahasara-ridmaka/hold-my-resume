@@ -1,215 +1,390 @@
 <!-- applications/templates/applications/partials/_application_drawer.html -->
-<div id="drawer-backdrop" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end transition-opacity duration-300" onclick="closeDrawer(event)">
-    
-    <!-- Drawer Panel -->
-    <div id="drawer-panel" class="bg-white w-full max-w-2xl h-full border-l border-black/15 flex flex-col shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-0" onclick="event.stopPropagation()">
-        
-        <!-- Header -->
-        <div class="p-6 sm:p-8 pb-5 border-b border-black/10 space-y-4 shrink-0 bg-white">
-            <div class="flex justify-between items-start gap-4">
-                <div>
-                    <h2 class="text-2xl font-extrabold tracking-tight text-black leading-tight">{{ app.job_title }}</h2>
-                    <div class="flex items-center gap-2 text-gray-500 text-xs mt-1 font-medium">
-                        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
-                        <span>{{ app.company.name }}</span>
-                    </div>
-                </div>
-
-                <!-- Close Button -->
-                <button 
-                    onclick="closeDrawerDirect()" 
-                    class="border border-black/20 rounded-full p-2 text-gray-500 hover:text-black hover:border-black hover:bg-neutral-100 transition"
-                >
-                    <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Tags & Key Info Badges -->
-            <div class="flex flex-wrap items-center gap-2 pt-1">
-                <span class="inline-flex items-center gap-1.5 border border-black/15 rounded-full px-3 py-1 text-[11px] font-bold tracking-wider uppercase bg-white">
-                    <span class="w-1.5 h-1.5 rounded-full 
-                        {% if app.status == 'APPLIED' %}bg-blue-500
-                        {% elif app.status == 'INTERVIEWING' %}bg-amber-400
-                        {% elif app.status == 'OFFER' %}bg-emerald-500
-                        {% elif app.status == 'REJECTED' %}bg-rose-500
-                        {% else %}bg-black{% endif %}">
-                    </span>
-                    {{ app.get_status_display }}
-                </span>
-
-                {% if app.salary_estimate %}
-                <span class="border border-black/15 rounded-md px-2 py-0.5 text-xs font-bold bg-neutral-50/80 text-black">
-                    ${{ app.salary_estimate|floatformat:0 }}
-                </span>
-                {% endif %}
-
-                {% if app.company.location %}
-                <span class="border border-black/15 rounded-md px-2 py-0.5 text-xs font-medium text-gray-700 bg-neutral-50/80">
-                    {{ app.company.location }}
-                </span>
-                {% endif %}
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex items-center justify-between gap-3 pt-2">
-                <div class="flex items-center gap-2">
-                    <button class="border border-black/20 rounded-full px-4 py-1.5 text-xs font-semibold flex items-center gap-1.5 hover:bg-neutral-100 hover:border-black transition">
-                        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                        Edit Details
-                    </button>
-
-                    {% if app.job_url %}
-                    <a href="{{ app.job_url }}" target="_blank" class="border border-black/20 rounded-full px-4 py-1.5 text-xs font-semibold flex items-center gap-1.5 hover:bg-neutral-100 hover:border-black transition">
-                        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                        Job Posting
-                    </a>
-                    {% endif %}
-                </div>
-
-                <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
-                    {{ app.get_platform_display }}
-                </span>
-            </div>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <div class="flex border-b border-black/10 px-6 sm:px-8 text-xs font-bold uppercase tracking-wider gap-6 bg-white shrink-0">
-            <button class="py-3.5 border-b-2 border-black text-black">Overview</button>
-            <button class="py-3.5 text-neutral-400 hover:text-black transition">Documents</button>
-            <button class="py-3.5 text-neutral-400 hover:text-black transition">Timeline</button>
-            <button class="py-3.5 text-neutral-400 hover:text-black transition">Notes</button>
-        </div>
-
-        <!-- Drawer Content -->
-        <div class="p-6 sm:p-8 space-y-6 flex-1 bg-white">
-            
-            <!-- Role Summary -->
-            <div class="space-y-3">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block">Role Summary</span>
-                <div class="border border-black/15 rounded-xl p-4 bg-neutral-50/50 text-xs sm:text-sm leading-relaxed text-gray-700">
-                    {{ app.job_description|default:"No role description added yet."|linebreaks }}
-                </div>
-            </div>
-
-            <!-- Meta Information Grid -->
-            <div class="space-y-3">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block">Metadata</span>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <!-- Location -->
-                    <div class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 flex items-center gap-3">
-                        <div class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0">
-                            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Location</p>
-                            <p class="text-xs font-semibold text-black truncate">{{ app.company.location|default:"Not specified" }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Platform -->
-                    <div class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 flex items-center gap-3">
-                        <div class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0">
-                            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Platform</p>
-                            <p class="text-xs font-semibold text-black truncate">{{ app.get_platform_display }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Applied Date -->
-                    <div class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 sm:col-span-2 flex items-center gap-3">
-                        <div class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0">
-                            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Applied Date</p>
-                            <p class="text-xs font-semibold text-black">
-                                {% if app.applied_date %}
-                                    {{ app.applied_date|date:"F d, Y" }}
-                                {% else %}
-                                    {{ app.created_at|date:"F d, Y" }}
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attached Documents -->
-            <div class="space-y-3">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block">Attached Documents</span>
-                <div class="space-y-2.5">
-                    {% if app.resume_file %}
-                    <a href="{{ app.resume_file.url }}" target="_blank" class="border border-black/15 rounded-xl p-3 bg-neutral-50/50 flex items-center justify-between hover:bg-neutral-100/70 transition">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0">
-                                <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </div>
-                            <div class="truncate">
-                                <p class="text-xs font-semibold text-black">Resume</p>
-                                <p class="text-[11px] text-neutral-400">Uploaded on {{ app.created_at|date:"M d, Y" }}</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-semibold text-neutral-600 underline hover:text-black">View</span>
-                    </a>
-                    {% endif %}
-
-                    {% if app.cover_letter_file %}
-                    <a href="{{ app.cover_letter_file.url }}" target="_blank" class="border border-black/15 rounded-xl p-3 bg-neutral-50/50 flex items-center justify-between hover:bg-neutral-100/70 transition">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0">
-                                <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div class="truncate">
-                                <p class="text-xs font-semibold text-black">Cover Letter</p>
-                                <p class="text-[11px] text-neutral-400">Uploaded on {{ app.created_at|date:"M d, Y" }}</p>
-                            </div>
-                        </div>
-                        <span class="text-xs font-semibold text-neutral-600 underline hover:text-black">View</span>
-                    </a>
-                    {% endif %}
-
-                    {% if not app.resume_file and not app.cover_letter_file %}
-                    <div class="text-center py-6 text-xs text-neutral-400 font-medium border border-dashed border-neutral-200 rounded-xl">
-                        No documents attached.
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Footer -->
-        <div class="p-6 sm:p-8 py-4 border-t border-black/10 flex items-center justify-end bg-white shrink-0">
-            <button
-                type="button"
-                onclick="closeDrawerDirect()"
-                class="border border-black/20 rounded-full px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-neutral-100 hover:text-black transition"
+<div
+  id="drawer-backdrop"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end transition-opacity duration-300"
+  onclick="closeDrawer(event)"
+>
+  <!-- Drawer Panel -->
+  <div
+    id="drawer-panel"
+    class="bg-white w-full max-w-2xl h-full border-l border-black/15 flex flex-col shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-0"
+    onclick="event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div
+      class="p-6 sm:p-8 pb-5 border-b border-black/10 space-y-4 shrink-0 bg-white"
+    >
+      <div class="flex justify-between items-start gap-4">
+        <div>
+          <h2
+            class="text-2xl font-extrabold tracking-tight text-black leading-tight"
+          >
+            {{ app.job_title }}
+          </h2>
+          <div
+            class="flex items-center gap-2 text-gray-500 text-xs mt-1 font-medium"
+          >
+            <svg
+              class="w-4 h-4 stroke-current"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
             >
-                Close
-            </button>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
+            <span>{{ app.company.name }}</span>
+          </div>
         </div>
 
+        <!-- Close Button -->
+        <button
+          onclick="closeDrawerDirect()"
+          class="border border-black/20 rounded-full p-2 text-gray-500 hover:text-black hover:border-black hover:bg-neutral-100 transition"
+        >
+          <svg
+            class="w-4 h-4 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Tags & Key Info Badges -->
+      <div class="flex flex-wrap items-center gap-2 pt-1">
+        <span
+          class="inline-flex items-center gap-1.5 border border-black/15 rounded-full px-3 py-1 text-[11px] font-bold tracking-wider uppercase bg-white"
+        >
+          <span
+            class="w-1.5 h-1.5 rounded-full {% if app.status == 'APPLIED' %}bg-blue-500 {% elif app.status == 'INTERVIEWING' %}bg-amber-400 {% elif app.status == 'OFFER' %}bg-emerald-500 {% elif app.status == 'REJECTED' %}bg-rose-500 {% else %}bg-black{% endif %}"
+          >
+          </span>
+          {{ app.get_status_display }}
+        </span>
+
+        {% if app.salary_estimate %}
+        <span
+          class="border border-black/15 rounded-md px-2 py-0.5 text-xs font-bold bg-neutral-50/80 text-black"
+        >
+          ${{ app.salary_estimate|floatformat:0 }}
+        </span>
+        {% endif %} {% if app.company.location %}
+        <span
+          class="border border-black/15 rounded-md px-2 py-0.5 text-xs font-medium text-gray-700 bg-neutral-50/80"
+        >
+          {{ app.company.location }}
+        </span>
+        {% endif %}
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-between gap-3 pt-2">
+        <div class="flex items-center gap-2">
+          <!-- Workable Edit Details Button -->
+          <button
+            hx-get="{% url 'applications:edit_details' app.id %}"
+            hx-target="#drawer-container"
+            hx-swap="innerHTML"
+            class="border border-black/20 rounded-full px-4 py-1.5 text-xs font-semibold flex items-center gap-1.5 hover:bg-neutral-100 hover:border-black transition"
+          >
+            <svg
+              class="w-3.5 h-3.5 stroke-current"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+              />
+            </svg>
+            Edit Details
+          </button>
+
+          {% if app.job_url %}
+          <a
+            href="{{ app.job_url }}"
+            target="_blank"
+            class="border border-black/20 rounded-full px-4 py-1.5 text-xs font-semibold flex items-center gap-1.5 hover:bg-neutral-100 hover:border-black transition"
+          >
+            <svg
+              class="w-3.5 h-3.5 stroke-current"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+            Job Posting
+          </a>
+          {% endif %}
+        </div>
+
+        <span
+          class="text-[10px] font-bold uppercase tracking-wider text-neutral-500"
+        >
+          {{ app.get_platform_display }}
+        </span>
+      </div>
     </div>
+
+    <!-- Navigation Tabs -->
+    <div
+      class="flex border-b border-black/10 px-6 sm:px-8 text-xs font-bold uppercase tracking-wider gap-6 bg-white shrink-0"
+    >
+      <button class="py-3.5 border-b-2 border-black text-black">
+        Overview
+      </button>
+      <button class="py-3.5 text-neutral-400 hover:text-black transition">
+        Documents
+      </button>
+      <button class="py-3.5 text-neutral-400 hover:text-black transition">
+        Timeline
+      </button>
+      <button class="py-3.5 text-neutral-400 hover:text-black transition">
+        Notes
+      </button>
+    </div>
+
+    <!-- Drawer Content -->
+    <div class="p-6 sm:p-8 space-y-6 flex-1 bg-white">
+      <!-- Role Summary -->
+      <div class="space-y-3">
+        <span
+          class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block"
+          >Role Summary</span
+        >
+        <div class="border border-black/15 rounded-xl p-4 bg-neutral-50/50 text-xs sm:text-sm leading-relaxed text-gray-700">
+  {{ app.job_description|default:"No role description added yet."|linebreaks }}
+</div>
+      </div>
+
+      <!-- Meta Information Grid -->
+      <div class="space-y-3">
+        <span
+          class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block"
+          >Metadata</span
+        >
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <!-- Location -->
+          <div
+            class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 flex items-center gap-3"
+          >
+            <div
+              class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0"
+            >
+              <svg
+                class="w-4 h-4 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p
+                class="text-[10px] font-bold uppercase tracking-wider text-neutral-500"
+              >
+                Location
+              </p>
+              <p class="text-xs font-semibold text-black truncate">
+                {{ app.company.location|default:"Not specified" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Platform -->
+          <div
+            class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 flex items-center gap-3"
+          >
+            <div
+              class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0"
+            >
+              <svg
+                class="w-4 h-4 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p
+                class="text-[10px] font-bold uppercase tracking-wider text-neutral-500"
+              >
+                Platform
+              </p>
+              <p class="text-xs font-semibold text-black truncate">
+                {{ app.get_platform_display }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Applied Date -->
+          <div
+            class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 sm:col-span-2 flex items-center gap-3"
+          >
+            <div
+              class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0"
+            >
+              <svg
+                class="w-4 h-4 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p
+                class="text-[10px] font-bold uppercase tracking-wider text-neutral-500"
+              >
+                Applied Date
+              </p>
+              <p class="text-xs font-semibold text-black">
+                {% if app.applied_date %} {{ app.applied_date|date:"F d, Y" }}
+                {% else %} {{ app.created_at|date:"F d, Y" }} {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attached Documents -->
+      <div class="space-y-3">
+        <span
+          class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block"
+          >Attached Documents</span
+        >
+        <div class="space-y-2.5">
+          {% if app.resume_file %}
+          <a
+            href="{{ app.resume_file.url }}"
+            target="_blank"
+            class="border border-black/15 rounded-xl p-3 bg-neutral-50/50 flex items-center justify-between hover:bg-neutral-100/70 transition"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <div
+                class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0"
+              >
+                <svg
+                  class="w-4 h-4 stroke-current"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
+              <div class="truncate">
+                <p class="text-xs font-semibold text-black">Resume</p>
+                <p class="text-[11px] text-neutral-400">
+                  Uploaded on {{ app.created_at|date:"M d, Y" }}
+                </p>
+              </div>
+            </div>
+            <span
+              class="text-xs font-semibold text-neutral-600 underline hover:text-black"
+              >View</span
+            >
+          </a>
+          {% endif %} {% if app.cover_letter_file %}
+          <a
+            href="{{ app.cover_letter_file.url }}"
+            target="_blank"
+            class="border border-black/15 rounded-xl p-3 bg-neutral-50/50 flex items-center justify-between hover:bg-neutral-100/70 transition"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <div
+                class="p-1.5 border border-black/15 rounded-lg bg-white text-gray-700 shrink-0"
+              >
+                <svg
+                  class="w-4 h-4 stroke-current"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <div class="truncate">
+                <p class="text-xs font-semibold text-black">Cover Letter</p>
+                <p class="text-[11px] text-neutral-400">
+                  Uploaded on {{ app.created_at|date:"M d, Y" }}
+                </p>
+              </div>
+            </div>
+            <span
+              class="text-xs font-semibold text-neutral-600 underline hover:text-black"
+              >View</span
+            >
+          </a>
+          {% endif %} {% if not app.resume_file and not app.cover_letter_file %}
+          <div
+            class="text-center py-6 text-xs text-neutral-400 font-medium border border-dashed border-neutral-200 rounded-xl"
+          >
+            No documents attached.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="p-6 sm:p-8 py-4 border-t border-black/10 flex items-center justify-end bg-white shrink-0"
+    >
+      <button
+        type="button"
+        onclick="closeDrawerDirect()"
+        class="border border-black/20 rounded-full px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-neutral-100 hover:text-black transition"
+      >
+        Close
+      </button>
+    </div>
+  </div>
 </div>
