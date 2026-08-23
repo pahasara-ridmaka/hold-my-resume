@@ -53,21 +53,29 @@ def auth_view(request):
     return render(request, 'accounts/auth.html')
 
 @login_required
-def profile_settings(request):
+def edit_profile(request):
     user = request.user
 
     if request.method == "POST":
-        form = ProfileUpdateForm(request.POST, request.FILES, instance=user)
+        form = ProfileUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            
+            messages.success(request, "Profile updated successfully.")
+
             if request.headers.get("HX-Request"):
                 response = HttpResponse()
                 response["HX-Refresh"] = "true"
                 return response
 
-            messages.success(request, "Profile updated successfully.")
             return redirect("accounts:profile_settings")
+        else:
+            if request.headers.get("HX-Request"):
+                return render(
+                    request,
+                    "accounts/partials/_profile_settings_drawer.html",
+                    {"form": form, "user": user},
+                    status=422, 
+                )
     else:
         form = ProfileUpdateForm(instance=user)
 
@@ -79,4 +87,4 @@ def profile_settings(request):
     if request.headers.get("HX-Request"):
         return render(request, "accounts/partials/_profile_settings_drawer.html", context)
 
-    return render(request, "accounts/profile_settings.html", context)
+    return render(request, "accounts/index.html", context)
