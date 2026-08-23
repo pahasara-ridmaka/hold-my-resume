@@ -2,6 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Company(models.Model):
@@ -77,3 +78,9 @@ class Application(models.Model):
 
     def __str__(self):
         return f"{self.user} applied for {self.job_title} at {self.company.name}"
+
+
+    def save(self, *args, **kwargs):
+        if not self.applied_date:
+            self.applied_date = timezone.localdate()
+        super().save(*args, **kwargs)
