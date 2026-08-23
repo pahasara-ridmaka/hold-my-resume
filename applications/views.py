@@ -423,70 +423,101 @@ def application_detail_drawer(request, pk):
 def export_analytics_csv(request):
     user = request.user
     user_apps = Application.objects.filter(user=user)
-    total_apps = user_apps.count()
 
-    # --- Calculations ---
-    interview_count = user_apps.filter(status=Application.Status.INTERVIEWING).count()
-    offer_count = user_apps.filter(status=Application.Status.OFFER).count()
+    # Aggregation
+    metrics = user_apps.aggregate(
+        total=Count("id"),
+        interview=Count("id", filter=Q(status=Application.Status.INTERVIEWING)),
+        offer=Count("id", filter=Q(status=Application.Status.OFFER)),
+        applied=Count("id", filter=Q(status=Application.Status.APPLIED)),
+    )
+
+    total_apps = metrics["total"]
+    interview_count = metrics["interview"]
+    offer_count = metrics["offer"]
+    in_review = metrics["applied"]
     responded_count = interview_count + offer_count
-    
+
     response_rate = round((responded_count / total_apps * 100), 1) if total_apps > 0 else 0
     interview_rate = round((interview_count / total_apps * 100), 1) if total_apps > 0 else 0
     offer_rate = round((offer_count / total_apps * 100), 1) if total_apps > 0 else 0
-    
+    in_review_pct = round((in_review / total_apps * 100), 1) if total_apps > 0 else 0
 
-    # --- HTTP Response Setup ---
+    response = HttpResponse(content_type="text/csv; charset=utf-8-sig")
     filename = f"job_search_report_{timezone.localdate().strftime('%Y%m%d')}.csv"
-    response = HttpResponse(content_type="text/csv; charset=utf-8")
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
 
     writer = csv.writer(response)
 
+    def write_row_6col(col1="", col2="", col3="", col4="", col5="", col6=""):
+        writer.writerow([col1, col2, col3, col4, col5, col6])
+
     # 1. Summary Header
-    writer.writerow(["=== JOB SEARCH ANALYTICS REPORT ==="])
-    writer.writerow(["Generated For", user.get_full_name() or user.username])
-    writer.writerow(["Generated Date", timezone.localdate().strftime("%Y-%m-%d")])
-    writer.writerow([])
+    write_row_6col("=== JOB SEARCH ANALYTICS REPORT ===")
+    write_row_6col("Generated For:", user.get_full_name() or user.username)
+    write_row_6col("Generated Date:", timezone.localdate().strftime("%Y-%m-%d"))
+    write_row_6col()
 
     # 2. Key Metrics
-    writer.writerow(["--- KEY METRICS ---"])
-    writer.writerow(["Metric", "Value"])
-    writer.writerow(["Total Applications", total_apps])
-    writer.writerow(["Response Rate", f"{response_rate}%"])
-    writer.writerow(["Interview Rate", f"{interview_rate}% ({interview_count} active)"])
-    writer.writerow(["Offer Rate", f"{offer_rate}% ({offer_count} secured)"])
-    writer.writerow([])
+    write_row_6col("--- KEY METRICS ---")
+    write_row_6col("Metric", "Value")
+    write_row_6col("Total Applications", total_apps)
+    write_row_6col("Response Rate", f"{response_rate}%")
+    write_row_6col("Interview Rate", f"{interview_rate}% ({interview_count} active)")
+    write_row_6col("Offer Rate", f"{offer_rate}% ({offer_count} secured)")
+    write_row_6col()
 
     # 3. Conversion Funnel
-    writer.writerow(["--- CONVERSION FUNNEL ---"])
-    writer.writerow(["Stage", "Count", "Percentage"])
-    writer.writerow(["Total Applied", total_apps, "100%"])
-    in_review = user_apps.filter(status=Application.Status.APPLIED).count()
-    in_review_pct = round((in_review / total_apps * 100), 1) if total_apps > 0 else 0
-    writer.writerow(["In Review / Queue", in_review, f"{in_review_pct}%"])
-    writer.writerow(["Interview Stages", interview_count, f"{interview_rate}%"])
-    writer.writerow(["Offers Secured", offer_count, f"{offer_rate}%"])
-    writer.writerow([])
+    write_row_6col("--- CONVERSION FUNNEL ---")
+    write_row_6col("Stage", "Count", "Percentage")
+    write_row_6col("Total Applied", total_apps, "100%")
+    write_row_6col("In Review / Queue", in_review, f"{in_review_pct}%")
+    write_row_6col("Interview Stages", interview_count, f"{interview_rate}%")
+    write_row_6col("Offers Secured", offer_count, f"{offer_rate}%")
+    write_row_6col()
 
     # 4. Detailed Applications Table
-    writer.writerow(["--- DETAILED APPLICATIONS LOG ---"])
+    write_row_6col("--- DETAILED APPLICATIONS LOG ---")
     writer.writerow([
-        "ID", 
-        "Company Name", 
-        "Role / Position", 
-        "Platform", 
-        "Applied Date", 
-        "Status", 
+        "ID",
+        "Company Name",
+        "Role / Position",
+        "Platform",
+        "Applied Date",
+        "Status",
     ])
 
     for app in user_apps.order_by("-applied_date"):
+        # Company name fallback
+        company = getattr(app, 'company', None) or "N/A"
+        # Role fallback
+        position = getattr(app, 'job_title', None) or "N/A"
+        # Platform display fallback
+        platform = (
+            app.get_platform_display()
+            if hasattr(app, "get_platform_display")
+            else getattr(app, "platform", None) or "N/A"
+        )
+        # Date fallback
+        applied_date = (
+            app.applied_date.strftime("%Y-%m-%d")
+            if getattr(app, "applied_date", None)
+            else "N/A"
+        )
+        # Status display fallback
+        status = (
+            app.get_status_display()
+            if hasattr(app, "get_status_display")
+            else getattr(app, "status", None) or "N/A"
+        )
+
         writer.writerow([
             app.id,
-            getattr(app, 'company_name', getattr(app, 'company', 'N/A')),
-            getattr(app, 'position', getattr(app, 'role', 'N/A')),
-            app.get_platform_display() if hasattr(app, 'get_platform_display') else app.platform,
-            app.applied_date.strftime("%Y-%m-%d") if app.applied_date else "N/A",
-            app.get_status_display() if hasattr(app, 'get_status_display') else app.status,
+            company,
+            position,
+            platform,
+            applied_date,
+            status,
         ])
 
     return response
