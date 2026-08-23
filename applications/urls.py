@@ -5,9 +5,9 @@ from . import views
 app_name = "applications"
 
 urlpatterns = [
-    path("applications", views.application_list, name="list"),
+    path("applications", views.application_list, name="application_list"),
     path("add/", views.add_application, name="add_application"),
-    path("analytics/", views.analytic, name="analytics"),
+    path("analytics/", views.analytics_view, name="analytics"),
     path(
         "applications/<uuid:pk>/update-status/",
         views.update_application_status,
@@ -19,4 +19,5 @@ urlpatterns = [
         name="application_detail_drawer",
     ),
     path("<uuid:pk>/edit/", views.edit_details, name="edit_details"),
+    path("<uuid:pk>/delete/", views.delete_details, name="delete_details"),
 ]
