@@ -300,16 +300,13 @@ def analytics_view(request):
     # --- 4. Dynamic Historical Activity Heatmap Logic ---
     today = timezone.localdate()
 
-    # Null values ignore කර පැරණිම දිනය සොයාගැනීම
     valid_apps = user_apps.exclude(applied_date__isnull=True)
     oldest_app_date = valid_apps.aggregate(earliest=Min("applied_date"))["earliest"]
 
     default_start = today - timedelta(weeks=52)
     start_date = min(oldest_app_date, default_start) if oldest_app_date else default_start
 
-    # Monday එකකට align කිරීම (Monday = 0)
     start_date = start_date - timedelta(days=start_date.weekday())
-    # Sunday එකකට align කිරීම (Sunday = 6)
     end_date = today + timedelta(days=(6 - today.weekday()))
 
     # Grouping by DateField directly
@@ -319,7 +316,6 @@ def analytics_view(request):
         .annotate(count=Count("id"))
     )
 
-    # Key එක string format එකට convert කර mapping එක සකස් කිරීම
     counts_map = {
         item["applied_date"].strftime("%Y-%m-%d"): item["count"]
         for item in app_counts
