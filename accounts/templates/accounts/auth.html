@@ -58,7 +58,7 @@
               <p class="text-xs text-neutral-500">Sign in to access your pipeline.</p>
             </div>
 
-            <form action="{% url 'login' %}" method="POST" class="space-y-4">
+            <form action="{% url 'accounts:login' %}" method="POST" class="space-y-4">
               {% csrf_token %}
               <input type="hidden" name="action_type" value="login" />
 
@@ -88,7 +88,7 @@
               <p class="text-xs text-neutral-500">Start organizing your applications today.</p>
             </div>
 
-            <form action="{% url 'register' %}" method="POST" class="space-y-3">
+            <form action="{% url 'accounts:register' %}" method="POST" class="space-y-3">
               {% csrf_token %}
               <input type="hidden" name="action_type" value="register" />
 
