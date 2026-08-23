@@ -10,7 +10,7 @@ from .forms import ProfileUpdateForm
 
 def auth_view(request):
     if request.user.is_authenticated:
-        return redirect('applications:list')
+        return redirect('applications:application_list')
 
     if request.method == 'POST':
         action_type = request.POST.get('action_type')
@@ -23,7 +23,7 @@ def auth_view(request):
             
             if user is not None:
                 login(request, user)
-                return redirect('applications:list')
+                return redirect('applications:application_list')
             else:
                 messages.error(request, 'Invalid username or password.')
 
