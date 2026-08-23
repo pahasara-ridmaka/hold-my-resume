@@ -1,7 +1,7 @@
 <!-- applications/templates/applications/partials/_application_content.html -->
 {% load humanize %}
 
-<div class="space-y-6">
+<div class="space-y-6" id="application-content">
   <!-- Top Title & Action -->
   <div class="flex items-center justify-between">
     <div>
@@ -14,24 +14,107 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <!-- Filter Button -->
-      <button
-        class="inline-flex items-center gap-2 border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-black hover:text-white transition"
+<!-- Filter Dropdown Component 
+<div class="relative inline-block text-left">
+  <!-- Filter Button -->
+  <button
+    id="filterButton"
+    type="button"
+    onclick="toggleFilterMenu(event)"
+    class="inline-flex items-center gap-2 border-2 border-black rounded-full px-4 py-1.5 text-xs font-bold {% if current_time_filter and current_time_filter != 'all' %}bg-black text-white{% else %}bg-white text-black hover:bg-black hover:text-white{% endif %} transition focus:outline-none"
+  >
+    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+    </svg>
+    Filter
+    {% if current_time_filter and current_time_filter != 'all' %}
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+    {% endif %}
+  </button>
+
+  <!-- Filter Dropdown Menu -->
+  <div
+    id="filterMenu"
+    class="hidden absolute right-0 mt-2 w-56 rounded-2xl border-2 border-black bg-white p-3.5 z-50 space-y-3"
+  >
+    <div class="flex items-center justify-between pb-2 border-b border-black/10">
+      <span class="text-[10px] font-black uppercase tracking-wider text-neutral-500">Date Applied</span>
+      {% if current_time_filter and current_time_filter != 'all' %}
+      <button 
+        type="button" 
+        hx-get="{% url 'applications:application_list' %}?time_filter=all"
+        hx-target="#application-content"
+        hx-swap="outerHTML"
+        class="text-[10px] font-bold text-neutral-400 hover:text-black transition underline"
       >
-        <svg
-          class="w-3.5 h-3.5 stroke-current"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-          />
-        </svg>
-        Filter
+        Reset
       </button>
+      {% endif %}
+    </div>
+    
+    <div class="space-y-1.5 text-xs font-bold text-black">
+      <!-- All Time -->
+      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == 'all' or not current_time_filter %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+        <span>All Time</span>
+        <input 
+          type="radio" 
+          name="time_filter" 
+          value="all"
+          hx-get="{% url 'applications:application_list' %}?time_filter=all"
+          hx-target="#application-content"
+          hx-swap="outerHTML"
+          class="accent-black w-3.5 h-3.5" 
+          {% if current_time_filter == 'all' or not current_time_filter %}checked{% endif %} 
+        />
+      </label>
+
+      <!-- Today -->
+      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == 'today' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+        <span>Today</span>
+        <input 
+          type="radio" 
+          name="time_filter" 
+          value="today"
+          hx-get="{% url 'applications:application_list' %}?time_filter=today"
+          hx-target="#application-content"
+          hx-swap="outerHTML"
+          class="accent-black w-3.5 h-3.5" 
+          {% if current_time_filter == 'today' %}checked{% endif %} 
+        />
+      </label>
+
+      <!-- Past 7 Days -->
+      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == '7days' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+        <span>Past 7 Days</span>
+        <input 
+          type="radio" 
+          name="time_filter" 
+          value="7days"
+          hx-get="{% url 'applications:application_list' %}?time_filter=7days"
+          hx-target="#application-content"
+          hx-swap="outerHTML"
+          class="accent-black w-3.5 h-3.5" 
+          {% if current_time_filter == '7days' %}checked{% endif %} 
+        />
+      </label>
+
+      <!-- Past 30 Days -->
+      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == '30days' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+        <span>Past 30 Days</span>
+        <input 
+          type="radio" 
+          name="time_filter" 
+          value="30days"
+          hx-get="{% url 'applications:application_list' %}?time_filter=30days"
+          hx-target="#application-content"
+          hx-swap="outerHTML"
+          class="accent-black w-3.5 h-3.5" 
+          {% if current_time_filter == '30days' %}checked{% endif %} 
+        />
+      </label>
+    </div>
+  </div>
+</div>
 
       <!-- Add Application Button -->
       <button
@@ -222,156 +305,3 @@
 <!-- CSRF Token -->
 {% csrf_token %}
 
-<script>
-  let isDragging = false;
-
-  function isCardClick(event) {
-    return !isDragging;
-  }
-
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-
-  function refreshKanbanCounts() {
-    const statusCounts = {
-      APPLIED: 0,
-      INTERVIEWING: 0,
-      OFFER: 0,
-      REJECTED: 0,
-    };
-
-    let totalApplications = 0;
-
-    document.querySelectorAll(".kanban-column-wrapper").forEach((wrapper) => {
-      const col = wrapper.querySelector(".kanban-col");
-      const status = col.getAttribute("data-status");
-      const cards = col.querySelectorAll(".kanban-card");
-      const count = cards.length;
-
-      const countBadge = wrapper.querySelector(".col-count");
-      if (countBadge) countBadge.textContent = count;
-
-      let placeholder = col.querySelector(".empty-placeholder");
-      if (count === 0) {
-        if (!placeholder) {
-          placeholder = document.createElement("div");
-          placeholder.className =
-            "empty-placeholder text-center py-8 text-xs text-gray-400 font-semibold border-2 border-dashed border-gray-200 rounded-2xl";
-          placeholder.textContent = "No applications";
-          col.appendChild(placeholder);
-        }
-      } else if (placeholder) {
-        placeholder.remove();
-      }
-
-      if (status in statusCounts) {
-        statusCounts[status] = count;
-      }
-      totalApplications += count;
-    });
-
-    const totalEl = document.getElementById("metric-total");
-    const appliedEl = document.getElementById("metric-applied");
-    const interviewingEl = document.getElementById("metric-interviewing");
-    const offerEl = document.getElementById("metric-offer");
-    const rejectedEl = document.getElementById("metric-rejected");
-
-    if (totalEl) totalEl.textContent = totalApplications;
-    if (appliedEl) appliedEl.textContent = statusCounts.APPLIED;
-    if (interviewingEl) interviewingEl.textContent = statusCounts.INTERVIEWING;
-    if (offerEl) offerEl.textContent = statusCounts.OFFER;
-    if (rejectedEl) rejectedEl.textContent = statusCounts.REJECTED;
-  }
-
-  function initKanban() {
-    const columns = document.querySelectorAll(".kanban-col");
-    const csrftoken =
-      getCookie("csrftoken") ||
-      document.querySelector("[name=csrfmiddlewaretoken]")?.value;
-
-    const statusColors = {
-      APPLIED: "bg-blue-50/60",
-      INTERVIEWING: "bg-amber-50/60",
-      OFFER: "bg-emerald-50/60",
-      REJECTED: "bg-rose-50/60",
-    };
-
-    columns.forEach((col) => {
-      new Sortable(col, {
-        group: "kanban-board",
-        draggable: ".kanban-card",
-        filter: ".empty-placeholder",
-        animation: 150,
-        ghostClass: "opacity-40",
-        chosenClass: "scale-[1.02]",
-        onStart: function () {
-          isDragging = true;
-        },
-        onEnd: function (evt) {
-          setTimeout(() => {
-            isDragging = false;
-          }, 150);
-
-          if (evt.from !== evt.to) {
-            const cardId = evt.item.getAttribute("data-id");
-            const targetStatus = evt.to.getAttribute("data-status");
-
-            // Update card styling based on target status
-            evt.item.classList.remove(
-              "bg-blue-50/60",
-              "bg-amber-50/60",
-              "bg-emerald-50/60",
-              "bg-rose-50/60",
-              "bg-white"
-            );
-            evt.item.classList.add(statusColors[targetStatus] || "bg-white");
-
-            refreshKanbanCounts();
-
-            fetch(`/app/applications/${cardId}/update-status/`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken,
-                "X-Requested-With": "XMLHttpRequest",
-              },
-              body: JSON.stringify({ status: targetStatus }),
-            }).catch((err) => {
-              console.error(err);
-              evt.from.appendChild(evt.item);
-              refreshKanbanCounts();
-            });
-          }
-        },
-      });
-    });
-  }
-
-  initKanban();
-  document.body.addEventListener("htmx:afterSwap", function () {
-    initKanban();
-  });
-
-  function closeDrawerDirect() {
-    const container = document.getElementById("drawer-container");
-    if (container) container.innerHTML = "";
-  }
-
-  function closeDrawer(event) {
-    if (event.target.id === "drawer-backdrop") {
-      closeDrawerDirect();
-    }
-  }
-</script>
