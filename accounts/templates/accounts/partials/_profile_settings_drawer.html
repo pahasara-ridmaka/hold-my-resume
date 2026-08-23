@@ -7,14 +7,14 @@
   <!-- Left Drawer Panel -->
   <div 
     id="drawer-panel" 
-    class="bg-white w-full max-w-xl h-full border-r border-black/15 flex flex-col shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-0" 
+    class="bg-white w-full max-w-lg h-full border-r border-black/15 flex flex-col shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-0" 
     onclick="event.stopPropagation()"
   >
     <!-- Header -->
     <div class="p-6 sm:p-8 pb-5 border-b border-black/10 flex justify-between items-start">
       <div>
-        <h2 class="text-2xl font-extrabold tracking-tight text-black">Edit Profile</h2>
-        <p class="text-xs text-neutral-500 mt-1">Update your personal information and public profile</p>
+        <h2 class="text-2xl font-extrabold tracking-tight text-black">Account Details</h2>
+        <p class="text-xs text-neutral-500 mt-1">Update your primary name and email address</p>
       </div>
 
       <!-- Close Button -->
@@ -29,33 +29,22 @@
       </button>
     </div>
 
-    <!-- Edit Profile Form -->
+    <!-- Edit User Form -->
     <form 
       hx-post="{% url 'accounts:edit_profile' %}" 
       hx-target="#drawer-container" 
-      enctype="multipart/form-data" 
       class="flex-1 flex flex-col justify-between"
     >
       {% csrf_token %}
 
       <div class="p-6 sm:p-8 space-y-6 flex-1">
-        <!-- Profile Picture Upload -->
-        <div class="flex items-center gap-4 p-4 border border-black/10 rounded-2xl bg-neutral-50/50">
-          <div class="w-16 h-16 rounded-full border-2 border-black bg-neutral-200 overflow-hidden shrink-0 flex items-center justify-center">
-            {% if user.profile.avatar %}
-              <img id="avatar-preview" src="{{ user.profile.avatar.url }}" alt="Avatar" class="w-full h-full object-cover">
-            {% else %}
-              <span class="text-lg font-black text-neutral-600">{{ user.first_name|first|default:user.username|first|upper }}</span>
-            {% endif %}
+
+        <!-- Non-field Errors -->
+        {% if form.non_field_errors %}
+          <div class="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl">
+            {{ form.non_field_errors }}
           </div>
-          <div class="space-y-1">
-            <label class="inline-flex items-center gap-2 border border-black rounded-full px-3 py-1 text-xs font-semibold hover:bg-black hover:text-white transition cursor-pointer">
-              <span>Change Photo</span>
-              <input type="file" name="avatar" accept="image/*" class="hidden">
-            </label>
-            <p class="text-[11px] text-neutral-400">JPG, PNG or WEBP. Max 2MB.</p>
-          </div>
-        </div>
+        {% endif %}
 
         <!-- Name Inputs -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -64,69 +53,48 @@
             <input 
               type="text" 
               name="first_name" 
-              value="{{ user.first_name|default:'' }}" 
-              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+              value="{{ form.first_name.value|default:user.first_name }}" 
+              placeholder="Your first name"
+              class="w-full px-3.5 py-2.5 rounded-xl border {% if form.first_name.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
               required
             >
+            {% if form.first_name.errors %}
+              <p class="text-[11px] text-red-600 mt-1">{{ form.first_name.errors.0 }}</p>
+            {% endif %}
           </div>
+
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Last Name</label>
             <input 
               type="text" 
               name="last_name" 
-              value="{{ user.last_name|default:'' }}" 
-              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+              value="{{ form.last_name.value|default:user.last_name }}" 
+              placeholder="Your last name"
+              class="w-full px-3.5 py-2.5 rounded-xl border {% if form.last_name.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
               required
             >
+            {% if form.last_name.errors %}
+              <p class="text-[11px] text-red-600 mt-1">{{ form.last_name.errors.0 }}</p>
+            {% endif %}
           </div>
         </div>
 
-        <!-- Email & Headline -->
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Email Address</label>
-            <input 
-              type="email" 
-              name="email" 
-              value="{{ user.email|default:'' }}" 
-              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
-              required
-            >
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Professional Headline</label>
-            <input 
-              type="text" 
-              name="headline" 
-              value="{{ user.profile.headline|default:'' }}" 
-              placeholder="e.g. Full Stack Developer | React & Django" 
-              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition"
-            >
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Location</label>
-            <input 
-              type="text" 
-              name="location" 
-              value="{{ user.profile.location|default:'' }}" 
-              placeholder="e.g. Colombo, Sri Lanka" 
-              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition"
-            >
-          </div>
-
-          <!-- Bio -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Bio</label>
-            <textarea 
-              name="bio" 
-              rows="3" 
-              placeholder="Tell a brief summary about yourself..." 
-              class="w-full px-3.5 py-2.5 rounded-xl border border-black/20 focus:border-black focus:ring-0 text-sm font-medium outline-none transition resize-none"
-            >{{ user.profile.bio|default:'' }}</textarea>
-          </div>
+        <!-- Email Address -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Email Address</label>
+          <input 
+            type="email" 
+            name="email" 
+            value="{{ form.email.value|default:user.email }}" 
+            placeholder="you@example.com"
+            class="w-full px-3.5 py-2.5 rounded-xl border {% if form.email.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+            required
+          >
+          {% if form.email.errors %}
+            <p class="text-[11px] text-red-600 mt-1">{{ form.email.errors.0 }}</p>
+          {% endif %}
         </div>
+
       </div>
 
       <!-- Footer Actions -->
