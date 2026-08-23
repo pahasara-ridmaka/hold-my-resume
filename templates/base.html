@@ -10,8 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/drawer.css' %}" />
   </head>
-  <body class="flex h-screen bg-neutral-100/60 text-black overflow-hidden font-sans antialiased">
-    
+  <body
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    class="flex h-screen bg-neutral-100/60 text-black overflow-hidden font-sans antialiased"
+  >
     <!-- Collapsible Sidebar -->
     <aside
       id="sidebar"
@@ -19,7 +21,10 @@
     >
       <div class="space-y-6">
         <!-- Header (Logo + Toggle) -->
-        <div id="sidebar-header" class="flex items-center justify-between transition-all">
+        <div
+          id="sidebar-header"
+          class="flex items-center justify-between transition-all"
+        >
           <div class="flex items-center gap-3 overflow-hidden">
             <div
               id="sidebar-logo"
@@ -27,7 +32,9 @@
             >
               CT
             </div>
-            <span class="text-lg font-black tracking-tight sidebar-label whitespace-nowrap">
+            <span
+              class="text-lg font-black tracking-tight sidebar-label whitespace-nowrap"
+            >
               CareerTrack
             </span>
           </div>
@@ -43,7 +50,11 @@
               viewBox="0 0 24 24"
               stroke-width="2.5"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+              />
             </svg>
           </button>
         </div>
@@ -52,13 +63,18 @@
         <nav id="sidebar-nav" class="space-y-1.5">
           <!-- Applications Link -->
           <a
-            href="{% url 'applications:list' %}"
-            hx-get="{% url 'applications:list' %}"
+            href="{% url 'applications:application_list' %}"
+            hx-get="{% url 'applications:application_list' %}"
             hx-target="#main-content"
             hx-push-url="true"
             class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold border transition group"
           >
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <svg
+              class="w-4 h-4 stroke-current shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -76,7 +92,12 @@
             hx-push-url="true"
             class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold border transition group"
           >
-            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <svg
+              class="w-4 h-4 stroke-current shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -101,24 +122,54 @@
               hx-get="{% url 'accounts:edit_profile' %}"
               hx-target="#drawer-container"
               hx-swap="innerHTML"
-              onclick="document.getElementById('user-context-menu').classList.add('hidden')"
+              onclick="
+                document
+                  .getElementById('user-context-menu')
+                  .classList.add('hidden')
+              "
               class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-black rounded-xl hover:bg-neutral-100 transition cursor-pointer"
             >
-              <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg
+                class="w-4 h-4 stroke-current shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
               <span>Settings</span>
             </button>
 
-            <form method="POST" action="{% url 'logout' %}" class="w-full m-0 p-0">
+            <form
+              method="POST"
+              action="{% url 'logout' %}"
+              class="w-full m-0 p-0"
+            >
               {% csrf_token %}
               <button
                 type="submit"
                 class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left"
               >
-                <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                <svg
+                  class="w-4 h-4 stroke-current shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                  />
                 </svg>
                 <span>Sign Out</span>
               </button>
@@ -134,32 +185,54 @@
         >
           <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
             {% if user.is_authenticated %}
-              <!-- Avatar -->
-              <div class="w-8 h-8 rounded-lg bg-neutral-900 text-white border border-black/10 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
-                {% if user.first_name and user.last_name %}{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}{% else %}{{ user.username|slice:":2"|upper }}{% endif %}
-              </div>
+            <!-- Avatar -->
+            <div class="w-8 h-8 rounded-lg bg-neutral-900 text-white border border-black/10 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+              {% if user.first_name and user.last_name %}
+              {{user.first_name|first|upper }}{{ user.last_name|first|upper }}
+              {%else %}{{ user.username|slice:":2"|upper }}{% endif %}
+            </div>
 
-              <!-- Name & Subtext -->
-              <div class="sidebar-label whitespace-nowrap min-w-0">
-                <p class="font-bold text-xs text-black leading-tight truncate">
-                  {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
-                </p>
-                <p class="text-[10px] font-medium text-neutral-500 truncate">Account</p>
-              </div>
+            <!-- Name & Subtext -->
+            <div class="sidebar-label whitespace-nowrap min-w-0">
+              <p class="font-bold text-xs text-black leading-tight truncate">
+                {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{
+                user.username }}{% endif %}
+              </p>
+              <p class="text-[10px] font-medium text-neutral-500 truncate">
+                Account
+              </p>
+            </div>
             {% else %}
-              <div class="w-8 h-8 rounded-lg bg-neutral-200 border border-black/10 flex items-center justify-center font-bold text-xs text-neutral-700 shrink-0">
-                G
-              </div>
-              <div class="sidebar-label whitespace-nowrap min-w-0">
-                <p class="font-bold text-xs text-black leading-tight truncate">Guest User</p>
-                <a href="{% url 'accounts:login' %}" class="text-[10px] font-semibold text-blue-600 hover:underline truncate">Sign In</a>
-              </div>
+            <div
+              class="w-8 h-8 rounded-lg bg-neutral-200 border border-black/10 flex items-center justify-center font-bold text-xs text-neutral-700 shrink-0"
+            >
+              G
+            </div>
+            <div class="sidebar-label whitespace-nowrap min-w-0">
+              <p class="font-bold text-xs text-black leading-tight truncate">
+                Guest User
+              </p>
+              <a
+                href="{% url 'accounts:login' %}"
+                class="text-[10px] font-semibold text-blue-600 hover:underline truncate"
+                >Sign In</a
+              >
+            </div>
             {% endif %}
           </div>
 
           <!-- 3 Dots Icon -->
-          <svg class="w-3.5 h-3.5 stroke-neutral-400 sidebar-label shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+          <svg
+            class="w-3.5 h-3.5 stroke-neutral-400 sidebar-label shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+            />
           </svg>
         </div>
       </div>
@@ -210,7 +283,11 @@
 
         navItems.forEach((item) => {
           const itemHref = item.getAttribute("href");
-          if (itemHref && currentPath.startsWith(itemHref) && itemHref !== "/") {
+          if (
+            itemHref &&
+            currentPath.startsWith(itemHref) &&
+            itemHref !== "/"
+          ) {
             updateActiveNav(item);
             matched = true;
           }
@@ -255,8 +332,17 @@
             item.classList.remove("px-3", "gap-3");
           });
 
-          userCard.classList.add("justify-center", "p-1", "border-transparent", "bg-transparent");
-          userCard.classList.remove("p-2", "bg-neutral-50/70", "border-black/10");
+          userCard.classList.add(
+            "justify-center",
+            "p-1",
+            "border-transparent",
+            "bg-transparent",
+          );
+          userCard.classList.remove(
+            "p-2",
+            "bg-neutral-50/70",
+            "border-black/10",
+          );
 
           toggleIcon.classList.add("rotate-180");
         } else {
@@ -273,7 +359,12 @@
             item.classList.add("px-3", "gap-3");
           });
 
-          userCard.classList.remove("justify-center", "p-1", "border-transparent", "bg-transparent");
+          userCard.classList.remove(
+            "justify-center",
+            "p-1",
+            "border-transparent",
+            "bg-transparent",
+          );
           userCard.classList.add("p-2", "bg-neutral-50/70", "border-black/10");
 
           toggleIcon.classList.remove("rotate-180");
@@ -290,10 +381,189 @@
       document.addEventListener("click", function (e) {
         const menu = document.getElementById("user-context-menu");
         const userCard = document.getElementById("user-card");
-        if (menu && !menu.classList.contains("hidden") && !menu.contains(e.target) && !userCard.contains(e.target)) {
+        if (
+          menu &&
+          !menu.classList.contains("hidden") &&
+          !menu.contains(e.target) &&
+          !userCard.contains(e.target)
+        ) {
           menu.classList.add("hidden");
         }
       });
+      let isDragging = false;
+
+      function isCardClick(event) {
+        return !isDragging;
+      }
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1),
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      function refreshKanbanCounts() {
+        const statusCounts = {
+          APPLIED: 0,
+          INTERVIEWING: 0,
+          OFFER: 0,
+          REJECTED: 0,
+        };
+
+        let totalApplications = 0;
+
+        document
+          .querySelectorAll(".kanban-column-wrapper")
+          .forEach((wrapper) => {
+            const col = wrapper.querySelector(".kanban-col");
+            const status = col.getAttribute("data-status");
+            const cards = col.querySelectorAll(".kanban-card");
+            const count = cards.length;
+
+            const countBadge = wrapper.querySelector(".col-count");
+            if (countBadge) countBadge.textContent = count;
+
+            let placeholder = col.querySelector(".empty-placeholder");
+            if (count === 0) {
+              if (!placeholder) {
+                placeholder = document.createElement("div");
+                placeholder.className =
+                  "empty-placeholder text-center py-8 text-xs text-gray-400 font-semibold border-2 border-dashed border-gray-200 rounded-2xl";
+                placeholder.textContent = "No applications";
+                col.appendChild(placeholder);
+              }
+            } else if (placeholder) {
+              placeholder.remove();
+            }
+
+            if (status in statusCounts) {
+              statusCounts[status] = count;
+            }
+            totalApplications += count;
+          });
+
+        const totalEl = document.getElementById("metric-total");
+        const appliedEl = document.getElementById("metric-applied");
+        const interviewingEl = document.getElementById("metric-interviewing");
+        const offerEl = document.getElementById("metric-offer");
+        const rejectedEl = document.getElementById("metric-rejected");
+
+        if (totalEl) totalEl.textContent = totalApplications;
+        if (appliedEl) appliedEl.textContent = statusCounts.APPLIED;
+        if (interviewingEl)
+          interviewingEl.textContent = statusCounts.INTERVIEWING;
+        if (offerEl) offerEl.textContent = statusCounts.OFFER;
+        if (rejectedEl) rejectedEl.textContent = statusCounts.REJECTED;
+      }
+
+      function initKanban() {
+        const columns = document.querySelectorAll(".kanban-col");
+        const csrftoken =
+          getCookie("csrftoken") ||
+          document.querySelector("[name=csrfmiddlewaretoken]")?.value;
+
+        const statusColors = {
+          APPLIED: "bg-blue-50/60",
+          INTERVIEWING: "bg-amber-50/60",
+          OFFER: "bg-emerald-50/60",
+          REJECTED: "bg-rose-50/60",
+        };
+
+        columns.forEach((col) => {
+          new Sortable(col, {
+            group: "kanban-board",
+            draggable: ".kanban-card",
+            filter: ".empty-placeholder",
+            animation: 150,
+            ghostClass: "opacity-40",
+            chosenClass: "scale-[1.02]",
+            onStart: function () {
+              isDragging = true;
+            },
+            onEnd: function (evt) {
+              setTimeout(() => {
+                isDragging = false;
+              }, 150);
+
+              if (evt.from !== evt.to) {
+                const cardId = evt.item.getAttribute("data-id");
+                const targetStatus = evt.to.getAttribute("data-status");
+
+                // Update card styling based on target status
+                evt.item.classList.remove(
+                  "bg-blue-50/60",
+                  "bg-amber-50/60",
+                  "bg-emerald-50/60",
+                  "bg-rose-50/60",
+                  "bg-white",
+                );
+                evt.item.classList.add(
+                  statusColors[targetStatus] || "bg-white",
+                );
+
+                refreshKanbanCounts();
+
+                fetch(`/app/applications/${cardId}/update-status/`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken,
+                    "X-Requested-With": "XMLHttpRequest",
+                  },
+                  body: JSON.stringify({ status: targetStatus }),
+                }).catch((err) => {
+                  console.error(err);
+                  evt.from.appendChild(evt.item);
+                  refreshKanbanCounts();
+                });
+              }
+            },
+          });
+        });
+      }
+
+      initKanban();
+      document.body.addEventListener("htmx:afterSwap", function () {
+        initKanban();
+      });
+
+      function closeDrawerDirect() {
+        const container = document.getElementById("drawer-container");
+        if (container) container.innerHTML = "";
+      }
+
+      function closeDrawer(event) {
+        if (event.target.id === "drawer-backdrop") {
+          closeDrawerDirect();
+        }
+      }
+
+
+      {% comment %} Filter button {% endcomment %}
+      function toggleFilterMenu(e) {
+          e.stopPropagation();
+          const menu = document.getElementById('filterMenu');
+          menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+          const menu = document.getElementById('filterMenu');
+          const btn = document.getElementById('filterButton');
+          if (menu && !menu.contains(e.target) && !btn.contains(e.target)) {
+            menu.classList.add('hidden');
+          }
+        });
 
     </script>
   </body>
