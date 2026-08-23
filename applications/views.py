@@ -1,3 +1,4 @@
+import csv
 import json
 from datetime import timedelta
 
@@ -210,12 +211,7 @@ def analytics_view(request):
         round((offer_count / total_apps * 100), 1) if total_apps > 0 else 0
     )
 
-    avg_salary_val = user_apps.aggregate(Avg("salary_estimate"))[
-        "salary_estimate__avg"
-    ]
-    avg_target = (
-        f"${round(float(avg_salary_val) / 1000)}k" if avg_salary_val else "$0k"
-    )
+ 
 
     # --- 2. Conversion Funnel ---
     funnel = [
@@ -376,7 +372,6 @@ def analytics_view(request):
         "response_rate": response_rate,
         "interview_rate": interview_rate,
         "offer_rate": offer_rate,
-        "avg_target": avg_target,
         "funnel": funnel,
         "top_sources": top_sources,
         "heatmap_weeks": heatmap_weeks,
@@ -423,3 +418,75 @@ def application_detail_drawer(request, pk):
         "applications/partials/_application_drawer.html",
         {"app": application},
     )
+
+@login_required
+def export_analytics_csv(request):
+    user = request.user
+    user_apps = Application.objects.filter(user=user)
+    total_apps = user_apps.count()
+
+    # --- Calculations ---
+    interview_count = user_apps.filter(status=Application.Status.INTERVIEWING).count()
+    offer_count = user_apps.filter(status=Application.Status.OFFER).count()
+    responded_count = interview_count + offer_count
+    
+    response_rate = round((responded_count / total_apps * 100), 1) if total_apps > 0 else 0
+    interview_rate = round((interview_count / total_apps * 100), 1) if total_apps > 0 else 0
+    offer_rate = round((offer_count / total_apps * 100), 1) if total_apps > 0 else 0
+    
+
+    # --- HTTP Response Setup ---
+    filename = f"job_search_report_{timezone.localdate().strftime('%Y%m%d')}.csv"
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+
+    writer = csv.writer(response)
+
+    # 1. Summary Header
+    writer.writerow(["=== JOB SEARCH ANALYTICS REPORT ==="])
+    writer.writerow(["Generated For", user.get_full_name() or user.username])
+    writer.writerow(["Generated Date", timezone.localdate().strftime("%Y-%m-%d")])
+    writer.writerow([])
+
+    # 2. Key Metrics
+    writer.writerow(["--- KEY METRICS ---"])
+    writer.writerow(["Metric", "Value"])
+    writer.writerow(["Total Applications", total_apps])
+    writer.writerow(["Response Rate", f"{response_rate}%"])
+    writer.writerow(["Interview Rate", f"{interview_rate}% ({interview_count} active)"])
+    writer.writerow(["Offer Rate", f"{offer_rate}% ({offer_count} secured)"])
+    writer.writerow([])
+
+    # 3. Conversion Funnel
+    writer.writerow(["--- CONVERSION FUNNEL ---"])
+    writer.writerow(["Stage", "Count", "Percentage"])
+    writer.writerow(["Total Applied", total_apps, "100%"])
+    in_review = user_apps.filter(status=Application.Status.APPLIED).count()
+    in_review_pct = round((in_review / total_apps * 100), 1) if total_apps > 0 else 0
+    writer.writerow(["In Review / Queue", in_review, f"{in_review_pct}%"])
+    writer.writerow(["Interview Stages", interview_count, f"{interview_rate}%"])
+    writer.writerow(["Offers Secured", offer_count, f"{offer_rate}%"])
+    writer.writerow([])
+
+    # 4. Detailed Applications Table
+    writer.writerow(["--- DETAILED APPLICATIONS LOG ---"])
+    writer.writerow([
+        "ID", 
+        "Company Name", 
+        "Role / Position", 
+        "Platform", 
+        "Applied Date", 
+        "Status", 
+    ])
+
+    for app in user_apps.order_by("-applied_date"):
+        writer.writerow([
+            app.id,
+            getattr(app, 'company_name', getattr(app, 'company', 'N/A')),
+            getattr(app, 'position', getattr(app, 'role', 'N/A')),
+            app.get_platform_display() if hasattr(app, 'get_platform_display') else app.platform,
+            app.applied_date.strftime("%Y-%m-%d") if app.applied_date else "N/A",
+            app.get_status_display() if hasattr(app, 'get_status_display') else app.status,
+        ])
+
+    return response

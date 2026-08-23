@@ -10,22 +10,16 @@
       </p>
     </div>
 
-    <div class="flex items-center gap-3">
-      <!-- Timeframe Filter -->
-      <button class="inline-flex items-center gap-2 border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-black hover:text-white transition">
-        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        All Time
-      </button>
+    
 
       <!-- Export Report -->
-      <button class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-        <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-        Export Report
-      </button>
+     <a href="{% url 'applications:export_analytics_csv' %}" 
+   class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] no-underline">
+  <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+  </svg>
+  Export Report
+</a>
     </div>
   </div>
 
@@ -66,17 +60,6 @@
       </div>
     </div>
 
-    <!-- Average Salary Target -->
-    <div class="p-3.5 px-5 border-t sm:border-t-0">
-      <div class="flex items-center gap-1.5">
-        <span class="w-1.5 h-1.5 rounded-full bg-black"></span>
-        <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Avg Target</span>
-      </div>
-      <div class="flex items-baseline gap-1.5 mt-0.5">
-        <span class="text-2xl font-black tracking-tight text-black">{{ avg_target }}</span>
-        <span class="text-[11px] text-neutral-400 font-medium">/ year</span>
-      </div>
-    </div>
   </div>
 
   <!-- Analytics Detailed Grid -->
@@ -185,7 +168,7 @@
         </div>
       </div>
 
-      <!-- Heatmap Legend (Blue Scale) -->
+      <!-- Heatmap Legend -->
       <div class="flex items-center justify-between pt-3 mt-3 border-t border-neutral-100 text-[11px] font-medium text-neutral-500">
         <span>Historical Activity Timeline</span>
         <div class="flex items-center gap-1.5 font-bold">

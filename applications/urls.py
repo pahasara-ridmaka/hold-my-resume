@@ -8,6 +8,7 @@ urlpatterns = [
     path("applications", views.application_list, name="application_list"),
     path("add/", views.add_application, name="add_application"),
     path("analytics/", views.analytics_view, name="analytics"),
+    path("analytics/export-csv", views.export_analytics_csv, name='export_analytics_csv'),
     path(
         "applications/<uuid:pk>/update-status/",
         views.update_application_status,
