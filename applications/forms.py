@@ -36,7 +36,6 @@ class ApplicationForm(forms.ModelForm):
             "job_description",
             "status",
             "platform",
-            "salary_estimate",
             "applied_date",
             "resume_file",
             "cover_letter_file",
@@ -57,9 +56,6 @@ class ApplicationForm(forms.ModelForm):
             ),
             "status": forms.Select(attrs={"class": "form-control"}),
             "platform": forms.Select(attrs={"class": "form-control"}),
-            "salary_estimate": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "e.g. 100000"}
-            ),
             "resume_file": forms.ClearableFileInput(
                 attrs={"class": "form-control-file"}
             ),

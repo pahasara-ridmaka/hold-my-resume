@@ -60,9 +60,6 @@ class Application(models.Model):
         choices=Platform.choices,
         default=Platform.LINKEDIN,
     )
-    salary_estimate = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True
-    )
     resume_file = models.FileField(upload_to="resumes/", blank=True, null=True)
     cover_letter_file = models.FileField(
         upload_to="cover_letters/", blank=True, null=True

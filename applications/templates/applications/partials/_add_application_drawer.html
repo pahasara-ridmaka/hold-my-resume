@@ -1,6 +1,5 @@
 <!-- applications/templates/applications/partials/_add_application_drawer.html -->
 
-
 <div 
   id="drawer-backdrop" 
   class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-end transition-opacity duration-300" 
@@ -102,7 +101,7 @@
         <div class="space-y-3">
           <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block">Application Details</span>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
             <!-- Status -->
             <div class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 flex flex-col justify-between focus-within:bg-white focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
               <label class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1" for="{{ form.status.id_for_label }}">
@@ -122,17 +121,6 @@
               {{ form.platform }}
               {% if form.platform.errors %}
               <p class="text-[11px] text-rose-500 font-medium mt-1">{{ form.platform.errors|striptags }}</p>
-              {% endif %}
-            </div>
-
-            <!-- Salary Estimate -->
-            <div class="border border-black/15 rounded-xl p-3.5 bg-neutral-50/50 flex flex-col justify-between focus-within:bg-white focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1" for="{{ form.salary_estimate.id_for_label }}">
-                Salary Estimate ($)
-              </label>
-              {{ form.salary_estimate }}
-              {% if form.salary_estimate.errors %}
-              <p class="text-[11px] text-rose-500 font-medium mt-1">{{ form.salary_estimate.errors|striptags }}</p>
               {% endif %}
             </div>
 
