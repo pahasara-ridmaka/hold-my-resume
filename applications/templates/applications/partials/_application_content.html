@@ -264,7 +264,7 @@
 
             <!-- Date Badge -->
             <span class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold shrink-0 whitespace-nowrap bg-white">
-              {% if app.applied_date %} {{ app.applied_date|date:"M d" }} {% else %} {{ app.created_at|timesince }} ago {% endif %}
+              {% if app.applied_date %} {{ app.applied_date|date:"Y M d" }} {% else %} {{ app.created_at|timesince }} ago {% endif %}
             </span>
           </div>
 
