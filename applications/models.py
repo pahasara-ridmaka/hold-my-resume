@@ -1,11 +1,10 @@
-import uuid
 import os
+import uuid
 
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils import timezone
-from django.core.files.storage import FileSystemStorage
-
 
 private_resume_storage = FileSystemStorage(
     location=os.path.join(settings.BASE_DIR, 'resumes')

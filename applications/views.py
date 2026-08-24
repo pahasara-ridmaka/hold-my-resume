@@ -284,7 +284,7 @@ def analytics_view(request):
     for item in sources_query:
         p_code = item["platform"]
         cnt = item["count"]
-        pct = round((cnt / total_apps * 100)) if total_apps > 0 else 0
+        pct = round(cnt / total_apps * 100) if total_apps > 0 else 0
         top_sources.append({
             "name": platform_map.get(p_code, p_code),
             "count": cnt,
