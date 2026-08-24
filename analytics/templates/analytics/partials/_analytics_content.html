@@ -10,17 +10,14 @@
       </p>
     </div>
 
-    
-
-      <!-- Export Report -->
-     <a href="{% url 'analytics:export_analytics_csv' %}" 
-   class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] no-underline">
-  <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-  </svg>
-  Export Report
-</a>
-    </div>
+    <!-- Export Report -->
+    <a href="{% url 'analytics:export_analytics_csv' %}" 
+       class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] no-underline">
+      <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+      </svg>
+      Export Report
+    </a>
   </div>
 
   <!-- Key Metrics Stat Strip -->
@@ -59,18 +56,17 @@
         <span class="text-[11px] text-emerald-600 font-medium">{{ offer_count }} secured</span>
       </div>
     </div>
-
   </div>
 
-  <!-- Analytics Detailed Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+<!-- Analytics Detailed Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 items-start">
     <!-- Application Conversion Funnel (2 Columns Wide) -->
-    <div class="md:col-span-2 space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b-2 border-black">
+    <div class="md:col-span-2 flex flex-col space-y-4">
+      <div class="flex items-center justify-between h-9 pb-3 border-b-2 border-black">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full border border-black bg-blue-500"></span>
           <span class="font-bold text-xs tracking-wider uppercase">Conversion Funnel</span>
-          <span class="border border-black rounded-full px-2 py-0.5 text-xs font-bold bg-white">4 Stages</span>
+          <span class="border border-black rounded-full px-2 py-0.5 text-xs font-bold bg-white leading-none">4 Stages</span>
         </div>
       </div>
 
@@ -91,28 +87,32 @@
       </div>
     </div>
 
-    <!-- Platform / Sources Breakdown (1 Column Wide) -->
-    <div class="space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b-2 border-black">
+    <!-- Simplified Platform / Sources Breakdown (1 Column Wide) -->
+    <div class="flex flex-col space-y-4">
+      <div class="flex items-center justify-between h-9 pb-3 border-b-2 border-black">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full border border-black bg-black"></span>
           <span class="font-bold text-xs tracking-wider uppercase">Top Sources</span>
         </div>
       </div>
 
-      <div class="border-2 border-black rounded-2xl p-4 bg-gray-50/50 space-y-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+      <div class="border-2 border-black rounded-2xl p-4 bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] h-[218px] overflow-y-auto pr-2 divide-y divide-neutral-100">
         {% for source in top_sources %}
-          <div class="flex items-center justify-between p-3 rounded-xl border border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <div>
-              <p class="font-bold text-xs">{{ source.name }}</p>
-              <p class="text-[10px] text-gray-500 font-medium mt-0.5">{{ source.count }} Applications</p>
+          <div class="py-2.5 first:pt-0 last:pb-0 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <div class="font-bold text-black truncate pr-2">{{ source.name }}</div>
+              <div class="text-[11px] font-semibold text-neutral-500 shrink-0">
+                {{ source.count }} <span class="text-neutral-400">({{ source.pct }}%)</span>
+              </div>
             </div>
-            <span class="border border-black rounded-full px-2 py-0.5 text-[10px] font-bold {{ source.badge_class }}">
-              {{ source.pct }}%
-            </span>
+            <div class="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+              <div class="h-full bg-black rounded-full transition-all duration-300" style="width: {{ source.pct }}%"></div>
+            </div>
           </div>
         {% empty %}
-          <p class="text-xs text-neutral-400 p-2 text-center">No platform data recorded yet.</p>
+          <div class="h-full flex items-center justify-center">
+            <p class="text-xs text-neutral-400">No platform data recorded yet.</p>
+          </div>
         {% endfor %}
       </div>
     </div>
@@ -143,7 +143,6 @@
                   class="w-full aspect-square rounded-[2px] border {{ day.bg_color }} {% if not day.is_future %}transition-transform hover:scale-125 cursor-pointer relative group/day hover:z-50{% endif %} {% if day.is_today %}ring-1 ring-black{% endif %}"
                 >
                   {% if not day.is_future %}
-                    <!-- Smart Collision-Free Tooltip -->
                     <div class="opacity-0 group-hover/day:opacity-100 pointer-events-none absolute 
                       {% if forloop.parentloop.first or forloop.parentloop.counter <= 4 %}
                         left-0 translate-x-0
