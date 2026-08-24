@@ -86,8 +86,8 @@
 
           <!-- Analytics Link -->
           <a
-            href="{% url 'applications:analytics' %}"
-            hx-get="{% url 'applications:analytics' %}"
+            href="{% url 'analytics:analytics_view' %}"
+            hx-get="{% url 'analytics:analytics_view' %}"
             hx-target="#main-content"
             hx-push-url="true"
             class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold border transition group"
@@ -514,7 +514,7 @@
 
                 refreshKanbanCounts();
 
-                fetch(`/app/applications/${cardId}/update-status/`, {
+                fetch(`/applications/${cardId}/update-status/`, {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
