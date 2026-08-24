@@ -1,57 +1,55 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
-from .forms import ProfileUpdateForm
+from .forms import ProfileUpdateForm, UserRegistrationForm
 
 
-def auth_view(request):
+def home_view(request):
+
+    return render(request, "accounts/home.html")
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect(['applications:application_list'])
+
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user)
+            return redirect('applications:application_list')
+    else:
+        form = UserRegistrationForm()
+
+    return render(request, 'accounts/register.html', {'form': form})
+
+
+def login_view(request):
     if request.user.is_authenticated:
         return redirect('applications:application_list')
 
     if request.method == 'POST':
-        action_type = request.POST.get('action_type')
+        form = AuthenticationForm(request, data=request.POST)
 
-        # 1. LOGIN LOGIC
-        if action_type == 'login':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request, username=username, password=password)
-            
-            if user is not None:
-                login(request, user)
-                return redirect('applications:application_list')
-            else:
-                messages.error(request, 'Invalid username or password.')
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('applications:application_list')
+        else:
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'accounts/login.html', {'form': form})
 
-        # 2. REGISTER LOGIC
-        elif action_type == 'register':
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            username = request.POST.get('username')
-            email = request.POST.get('email')
-            password = request.POST.get('password')
 
-            if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username already taken.')
-            elif User.objects.filter(email=email).exists():
-                messages.error(request, 'Email already registered.')
-            else:
-                user = User.objects.create_user(
-                    username=username,
-                    email=email,
-                    password=password,
-                    first_name=first_name,
-                    last_name=last_name
-                )
-                login(request, user)
-                return redirect('applications:application_list')
 
-    return render(request, 'accounts/auth.html')
 
 @login_required
 def edit_profile(request):
