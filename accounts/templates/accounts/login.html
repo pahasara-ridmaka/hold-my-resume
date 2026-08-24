@@ -60,6 +60,9 @@
       <label for="id_password" class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block">
         Password
       </label>
+      <a href="{% url 'accounts:password_reset' %}" class="text-[10px] font-bold text-neutral-600 hover:text-black hover:underline transition float-right">
+        Forgot Password?
+        </a>
       <input
         type="password"
         name="password"
