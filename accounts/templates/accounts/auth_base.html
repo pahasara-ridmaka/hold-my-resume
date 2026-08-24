@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerTrack — Account Access</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-full bg-white text-black font-sans antialiased selection:bg-black selection:text-white overflow-hidden">
+
+  <div class="h-full w-full flex flex-col lg:flex-row">
+    
+    <!-- Left Section (2/3 Width) -->
+    <div class="hidden lg:flex lg:w-2/3 bg-white text-black items-center justify-center border-r-2 border-black/10 select-none">
+      <h1 class="text-6xl xl:text-8xl font-black tracking-tight">
+        CareerTrack
+      </h1>
+    </div>
+
+    <!-- Right Form Section (1/3 Width) -->
+    <div class="w-full lg:w-1/3 h-full flex flex-col justify-between items-center p-6 sm:p-10 bg-white overflow-y-auto">
+      
+      <!-- Mobile View Logo -->
+      <div class="flex lg:hidden items-center justify-center pt-2">
+        <span class="font-black text-2xl tracking-tight">CareerTrack</span>
+      </div>
+
+      <!-- Centered Forms Wrapper -->
+      <div class="my-auto max-w-sm w-full space-y-5 flex flex-col justify-start">
+        
+        <!-- Messages Display -->
+        {% if messages %}
+          <div class="space-y-2">
+            {% for message in messages %}
+              <div class="p-3 text-xs font-semibold rounded-xl border border-red-200 bg-red-50 text-red-700">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        
+           {% block content %}{% endblock content %}
+
+      </div>
+
+      <!-- Footer Policy Links -->
+      <div class="py-2 text-center text-[11px] text-neutral-400 max-w-sm w-full">
+        By continuing, you agree to our <a href="#" class="underline hover:text-black">Terms</a> and <a href="#" class="underline hover:text-black">Privacy Policy</a>.
+      </div>
+    </div>
+  </div>
+
+ 
+</body>
+</html>
