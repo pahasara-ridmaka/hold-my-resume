@@ -48,7 +48,7 @@ def auth_view(request):
                     last_name=last_name
                 )
                 login(request, user)
-                return redirect('applications:list')
+                return redirect('applications:application_list')
 
     return render(request, 'accounts/auth.html')
 
