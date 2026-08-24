@@ -1,10 +1,11 @@
 import csv
 import json
+import mimetypes
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count, Min, Q
-from django.http import HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -521,3 +522,42 @@ def export_analytics_csv(request):
         ])
 
     return response
+
+
+@login_required
+def view_resume(request, pk):
+    application = get_object_or_404(Application, pk=pk)
+
+    if application.user != request.user and not request.user.is_staff:
+            return JsonResponse({"success": False, "error": "Permission denied"}, status=400)
+    if not application.resume_file:
+        return JsonResponse({"success": False, "error": "No resume file found"}, status=404)
+
+    content_type, _ = mimetypes.guess_type(application.resume_file.name)
+
+    return FileResponse(
+        application.resume_file.open("rb"),
+        content_type=content_type or 'application/pdf',
+        as_attachment=False,
+
+    )
+
+
+@login_required
+def view_cover_letter(request, pk):
+    application = get_object_or_404(Application, pk=pk)
+
+
+    if application.user != request.user and not request.user.is_staff:
+            return JsonResponse({"success": False, "error": "Permission denied"}, status=400)
+    if not application.cover_letter_file:
+        return JsonResponse({"success": False, "error": "No cover letter file found"}, status=404)
+
+    content_typpe, _ = mimetypes.guess_type(application.cover_letter_file.name)
+
+
+    return FileResponse(
+        application.cover_letter_file.open("rb"),
+        content_type=content_typpe or 'application/pdf',
+        as_attachment=False,
+    )

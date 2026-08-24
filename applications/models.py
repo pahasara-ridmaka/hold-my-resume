@@ -1,9 +1,18 @@
 import uuid
+import os
 
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.core.files.storage import FileSystemStorage
 
+
+private_resume_storage = FileSystemStorage(
+    location=os.path.join(settings.BASE_DIR, 'resumes')
+)
+private_cover_letter_storage = FileSystemStorage(
+    location=os.path.join(settings.BASE_DIR, 'cover_letters')
+)
 
 class Company(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
@@ -60,9 +69,9 @@ class Application(models.Model):
         choices=Platform.choices,
         default=Platform.LINKEDIN,
     )
-    resume_file = models.FileField(upload_to="resumes/", blank=True, null=True)
+    resume_file = models.FileField(storage=private_resume_storage, blank=True, null=True)
     cover_letter_file = models.FileField(
-        upload_to="cover_letters/", blank=True, null=True
+        storage=private_cover_letter_storage, blank=True, null=True
     )
     applied_date = models.DateField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -6,6 +6,8 @@ app_name = "applications"
 
 urlpatterns = [
     path("applications", views.application_list, name="application_list"),
+    path("applications/<uuid:pk>/resume/", views.view_resume, name="view_resume"),
+    path("applications/<uuid:pk>/cover-letter/", views.view_cover_letter, name="view_cover_letter"),
     path("add/", views.add_application, name="add_application"),
     path("analytics/", views.analytics_view, name="analytics"),
     path("analytics/export-csv", views.export_analytics_csv, name='export_analytics_csv'),
