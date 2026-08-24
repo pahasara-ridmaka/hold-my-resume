@@ -14,7 +14,7 @@
     <div class="p-6 sm:p-8 pb-5 border-b border-black/10 flex justify-between items-start">
       <div>
         <h2 class="text-2xl font-extrabold tracking-tight text-black">Account Details</h2>
-        <p class="text-xs text-neutral-500 mt-1">Update your primary name and email address</p>
+        <p class="text-xs text-neutral-500 mt-1">Update your primary name, email, and security settings</p>
       </div>
 
       <!-- Close Button -->
@@ -32,7 +32,8 @@
     <!-- Edit User Form -->
     <form 
       hx-post="{% url 'accounts:edit_profile' %}" 
-      hx-target="#drawer-container" 
+      hx-target="#drawer-panel" 
+      hx-swap="outerHTML"
       class="flex-1 flex flex-col justify-between"
     >
       {% csrf_token %}
@@ -93,6 +94,25 @@
           {% if form.email.errors %}
             <p class="text-[11px] text-red-600 mt-1">{{ form.email.errors.0 }}</p>
           {% endif %}
+        </div>
+
+        <!-- Password & Security Card Trigger -->
+        <div class="pt-5 border-t border-black/10">
+          <div class="p-4 rounded-2xl border border-black/10 bg-neutral-50 flex items-center justify-between gap-4">
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-black">Password</h3>
+              <p class="text-[11px] text-neutral-500 mt-0.5">Manage and update your account password</p>
+            </div>
+            <button 
+              type="button"
+              hx-get="{% url 'accounts:change_password' %}"
+              hx-target="#drawer-panel"
+              hx-swap="outerHTML"
+              class="px-3.5 py-1.5 bg-white border border-black/20 rounded-full text-xs font-semibold hover:border-black hover:bg-neutral-100 transition whitespace-nowrap"
+            >
+              Change
+            </button>
+          </div>
         </div>
 
       </div>
