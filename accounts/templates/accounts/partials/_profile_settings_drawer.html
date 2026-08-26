@@ -4,24 +4,25 @@
   class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-start transition-opacity duration-300" 
   onclick="closeDrawer(event)"
 >
-  <!-- Left Drawer Panel -->
+  <!-- Left Drawer Panel (Full width on mobile, max-w-lg on larger screens) -->
   <div 
     id="drawer-panel" 
-    class="bg-white w-full max-w-lg h-full border-r border-black/15 flex flex-col shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-0" 
+    class="bg-white w-full sm:max-w-lg h-full border-r border-black/15 flex flex-col shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-0" 
     onclick="event.stopPropagation()"
   >
-    <!-- Header -->
-    <div class="p-6 sm:p-8 pb-5 border-b border-black/10 flex justify-between items-start">
-      <div>
-        <h2 class="text-2xl font-extrabold tracking-tight text-black">Account Details</h2>
-        <p class="text-xs text-neutral-500 mt-1">Update your primary name, email, and security settings</p>
+    <!-- Header (Sticky top for mobile scrolling) -->
+    <div class="p-4 sm:p-8 pb-4 sm:pb-5 border-b border-black/10 flex justify-between items-start gap-4 shrink-0 bg-white sticky top-0 z-10">
+      <div class="min-w-0 flex-1">
+        <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-black leading-tight truncate">Account Details</h2>
+        <p class="text-xs text-neutral-500 mt-0.5 sm:mt-1 truncate">Update your name, email, and security settings</p>
       </div>
 
       <!-- Close Button -->
       <button 
         type="button" 
         onclick="closeDrawerDirect()" 
-        class="border border-black/20 rounded-full p-2 text-gray-500 hover:text-black hover:border-black transition"
+        class="border border-black/20 rounded-full p-1.5 sm:p-2 text-gray-500 hover:text-black hover:border-black hover:bg-neutral-100 active:scale-95 transition shrink-0"
+        aria-label="Close drawer"
       >
         <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -33,82 +34,82 @@
     <form 
       hx-post="{% url 'accounts:edit_profile' %}" 
       hx-target="#drawer-panel" 
-      hx-swap="outerHTML"
+      hx-swap="outerHTML" 
       class="flex-1 flex flex-col justify-between"
     >
       {% csrf_token %}
 
-      <div class="p-6 sm:p-8 space-y-6 flex-1">
+      <div class="p-4 sm:p-8 space-y-5 sm:space-y-6 flex-1 bg-white">
 
         <!-- Non-field Errors -->
         {% if form.non_field_errors %}
-          <div class="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl">
+          <div class="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
             {{ form.non_field_errors }}
           </div>
         {% endif %}
 
         <!-- Name Inputs -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">First Name</label>
+            <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-black mb-1.5">First Name</label>
             <input 
               type="text" 
               name="first_name" 
               value="{{ form.first_name.value|default:user.first_name }}" 
               placeholder="Your first name"
-              class="w-full px-3.5 py-2.5 rounded-xl border {% if form.first_name.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+              class="w-full px-3.5 py-2 sm:py-2.5 rounded-xl border {% if form.first_name.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
               required
             >
             {% if form.first_name.errors %}
-              <p class="text-[11px] text-red-600 mt-1">{{ form.first_name.errors.0 }}</p>
+              <p class="text-[11px] text-red-600 mt-1 font-medium">{{ form.first_name.errors.0 }}</p>
             {% endif %}
           </div>
 
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Last Name</label>
+            <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-black mb-1.5">Last Name</label>
             <input 
               type="text" 
               name="last_name" 
               value="{{ form.last_name.value|default:user.last_name }}" 
               placeholder="Your last name"
-              class="w-full px-3.5 py-2.5 rounded-xl border {% if form.last_name.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+              class="w-full px-3.5 py-2 sm:py-2.5 rounded-xl border {% if form.last_name.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
               required
             >
             {% if form.last_name.errors %}
-              <p class="text-[11px] text-red-600 mt-1">{{ form.last_name.errors.0 }}</p>
+              <p class="text-[11px] text-red-600 mt-1 font-medium">{{ form.last_name.errors.0 }}</p>
             {% endif %}
           </div>
         </div>
 
         <!-- Email Address -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-black mb-1.5">Email Address</label>
+          <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-black mb-1.5">Email Address</label>
           <input 
             type="email" 
             name="email" 
             value="{{ form.email.value|default:user.email }}" 
             placeholder="you@example.com"
-            class="w-full px-3.5 py-2.5 rounded-xl border {% if form.email.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
+            class="w-full px-3.5 py-2 sm:py-2.5 rounded-xl border {% if form.email.errors %}border-red-500{% else %}border-black/20{% endif %} focus:border-black focus:ring-0 text-sm font-medium outline-none transition" 
             required
           >
           {% if form.email.errors %}
-            <p class="text-[11px] text-red-600 mt-1">{{ form.email.errors.0 }}</p>
+            <p class="text-[11px] text-red-600 mt-1 font-medium">{{ form.email.errors.0 }}</p>
           {% endif %}
         </div>
 
         <!-- Password & Security Card Trigger -->
-        <div class="pt-5 border-t border-black/10">
-          <div class="p-4 rounded-2xl border border-black/10 bg-neutral-50 flex items-center justify-between gap-4">
-            <div>
-              <h3 class="text-xs font-bold uppercase tracking-wider text-black">Password</h3>
-              <p class="text-[11px] text-neutral-500 mt-0.5">Manage and update your account password</p>
+        <div class="pt-4 sm:pt-5 border-t border-black/10">
+          <div class="p-3.5 sm:p-4 rounded-2xl border border-black/10 bg-neutral-50/70 flex items-center justify-between gap-3 sm:gap-4">
+            <div class="min-w-0 flex-1">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-black truncate">Password</h3>
+              <p class="text-[11px] text-neutral-500 mt-0.5 truncate">Manage your account password</p>
             </div>
             <button 
               type="button"
               hx-get="{% url 'accounts:change_password' %}"
               hx-target="#drawer-panel"
               hx-swap="outerHTML"
-              class="px-3.5 py-1.5 bg-white border border-black/20 rounded-full text-xs font-semibold hover:border-black hover:bg-neutral-100 transition whitespace-nowrap"
+              class="px-3 sm:px-3.5 py-1.5 bg-white border border-black/20 rounded-full text-xs font-semibold hover:border-black hover:bg-neutral-100 active:scale-95 transition whitespace-nowrap shrink-0"
             >
               Change
             </button>
@@ -117,18 +118,18 @@
 
       </div>
 
-      <!-- Footer Actions -->
-      <div class="p-6 sm:p-8 border-t border-black/10 flex justify-end items-center gap-3 bg-neutral-50/50">
+      <!-- Footer Actions (Sticky bottom with full width touch-friendly buttons on mobile) -->
+      <div class="p-4 sm:p-8 py-3.5 sm:py-4 border-t border-black/10 flex flex-row items-center justify-end gap-2.5 sm:gap-3 bg-neutral-50/50 shrink-0 sticky bottom-0 z-10">
         <button 
           type="button" 
           onclick="closeDrawerDirect()" 
-          class="px-4 py-2 border border-black/20 rounded-full text-xs font-semibold hover:border-black transition"
+          class="flex-1 sm:flex-none px-4 py-2 sm:py-1.5 border border-black/20 rounded-full text-xs font-semibold text-gray-700 hover:border-black hover:bg-neutral-100 active:scale-95 transition text-center"
         >
           Cancel
         </button>
         <button 
           type="submit" 
-          class="px-5 py-2 bg-black text-white border border-black rounded-full text-xs font-semibold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-neutral-800 transition"
+          class="flex-1 sm:flex-none px-5 py-2 sm:py-1.5 bg-black text-white border border-black rounded-full text-xs font-semibold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-neutral-800 active:scale-95 transition text-center"
         >
           Save Changes
         </button>
