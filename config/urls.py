@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 from applications import views
 
@@ -28,4 +29,7 @@ urlpatterns = [
     path("applications/", include("applications.urls")),
     path("analytics/", include("analytics.urls")),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("terms/", TemplateView.as_view(template_name="legal/terms_of_service.html"), name="terms_of_service"),
+    path("privacy/", TemplateView.as_view(template_name="legal/privacy_policy.html"), name="privacy_policy"),
+    
 ]
