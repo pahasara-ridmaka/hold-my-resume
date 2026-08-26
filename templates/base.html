@@ -12,12 +12,36 @@
   </head>
   <body
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    class="flex h-screen bg-neutral-100/60 text-black overflow-hidden font-sans antialiased"
+    class="flex flex-col md:flex-row h-screen bg-neutral-100/60 text-black overflow-hidden font-sans antialiased"
   >
-    <!-- Collapsible Sidebar -->
+    <!-- Mobile Top Navigation Bar -->
+    <header class="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-black/10 shrink-0 z-30">
+      <div class="flex items-center gap-2">
+        <img src="{% static 'images/logo-icon.png' %}" alt="Logo Icon" class="w-7 h-7 object-contain">
+        <img src="{% static 'images/logo-name.png' %}" alt="Logo Name" class="h-5 w-auto object-contain">
+      </div>
+      <button
+        onclick="toggleMobileSidebar()"
+        class="p-2 rounded-lg border border-black/15 hover:bg-neutral-100 active:scale-95 transition"
+        aria-label="Open Navigation"
+      >
+        <svg class="w-5 h-5 stroke-black" fill="none" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- Mobile Overlay Backdrop -->
+    <div
+      id="sidebar-overlay"
+      onclick="toggleMobileSidebar()"
+      class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+    ></div>
+
+    <!-- Responsive Sidebar -->
     <aside
       id="sidebar"
-      class="w-64 bg-white border-r border-black/15 p-4 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 select-none shadow-[1px_0px_0px_0px_rgba(0,0,0,0.05)]"
+      class="fixed inset-y-0 left-0 z-50 -translate-x-full md:translate-x-0 md:static w-64 bg-white border-r border-black/15 p-4 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 select-none shadow-[1px_0px_0px_0px_rgba(0,0,0,0.05)]"
     >
       <div class="space-y-6">
         <!-- Header (Logo + Toggle) -->
@@ -26,24 +50,21 @@
           class="flex items-center justify-between transition-all"
         >
           <div class="flex items-center gap-3 overflow-hidden">
-             <div
+            <div
               id="sidebar-logo"
-              class="w-8 h-8  text-white flex items-center justify-center font-black text-xs shrink-0 "
+              class="w-8 h-8 text-white flex items-center justify-center font-black text-xs shrink-0"
             >
-             
-            <img src="{% static 'images/logo-icon.png' %}" alt="Logo Icon" width = '512'>
-
+              <img src="{% static 'images/logo-icon.png' %}" alt="Logo Icon" class="w-8 h-8 object-contain">
             </div>
-            <span
-              class="text-lg font-black tracking-tight sidebar-label whitespace-nowrap"
-            >
-            <img src="{% static 'images/logo-name.png' %}" alt="Logo Name" width = '512'>
-            </span> 
-
+            <span class="sidebar-label whitespace-nowrap">
+              <img src="{% static 'images/logo-name.png' %}" alt="Logo Name" class="h-6 w-auto object-contain">
+            </span>
           </div>
+
+          <!-- Desktop Collapse Button -->
           <button
             onclick="toggleSidebar()"
-            class="p-1.5 rounded-lg border border-black/20 hover:border-black hover:bg-neutral-100 transition active:scale-95 shrink-0"
+            class="hidden md:block p-1.5 rounded-lg border border-black/20 hover:border-black hover:bg-neutral-100 transition active:scale-95 shrink-0"
             title="Toggle Sidebar"
           >
             <svg
@@ -53,11 +74,17 @@
               viewBox="0 0 24 24"
               stroke-width="2.5"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <!-- Mobile Close Button -->
+          <button
+            onclick="toggleMobileSidebar()"
+            class="md:hidden p-1.5 rounded-lg border border-black/15 hover:bg-neutral-100 transition"
+          >
+            <svg class="w-4 h-4 stroke-black" fill="none" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -72,12 +99,7 @@
             hx-push-url="true"
             class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold border transition group"
           >
-            <svg
-              class="w-4 h-4 stroke-current shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-            >
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -95,12 +117,7 @@
             hx-push-url="true"
             class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold border transition group"
           >
-            <svg
-              class="w-4 h-4 stroke-current shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-            >
+            <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -125,49 +142,27 @@
               hx-get="{% url 'accounts:edit_profile' %}"
               hx-target="#drawer-container"
               hx-swap="innerHTML"
-              onclick="
-                document
-                  .getElementById('user-context-menu')
-                  .classList.add('hidden')
-              "
+              onclick="document.getElementById('user-context-menu').classList.add('hidden')"
               class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-black rounded-xl hover:bg-neutral-100 transition cursor-pointer"
             >
-              <svg
-                class="w-4 h-4 stroke-current shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-              >
+              <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
                 />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <span>Settings</span>
             </button>
 
-            <form
-              method="POST"
-              action="{% url 'logout' %}"
-              class="w-full m-0 p-0"
-            >
+            <form method="POST" action="{% url 'logout' %}" class="w-full m-0 p-0">
               {% csrf_token %}
               <button
                 type="submit"
                 class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left"
               >
-                <svg
-                  class="w-4 h-4 stroke-current shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                >
+                <svg class="w-4 h-4 stroke-current shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -188,61 +183,40 @@
         >
           <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
             {% if user.is_authenticated %}
-            <!-- Avatar -->
             <div class="w-8 h-8 rounded-lg bg-neutral-900 text-white border border-black/10 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
               {% if user.first_name and user.last_name %}
-              {{user.first_name|first|upper }}{{ user.last_name|first|upper }}
-              {%else %}{{ user.username|slice:":2"|upper }}{% endif %}
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+              {% else %}
+                {{ user.username|slice:":2"|upper }}
+              {% endif %}
             </div>
 
-            <!-- Name & Subtext -->
             <div class="sidebar-label whitespace-nowrap min-w-0">
               <p class="font-bold text-xs text-black leading-tight truncate">
-                {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{
-                user.username }}{% endif %}
+                {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}
               </p>
-              <p class="text-[10px] font-medium text-neutral-500 truncate">
-                Account
-              </p>
+              <p class="text-[10px] font-medium text-neutral-500 truncate">Account</p>
             </div>
             {% else %}
-            <div
-              class="w-8 h-8 rounded-lg bg-neutral-200 border border-black/10 flex items-center justify-center font-bold text-xs text-neutral-700 shrink-0"
-            >
+            <div class="w-8 h-8 rounded-lg bg-neutral-200 border border-black/10 flex items-center justify-center font-bold text-xs text-neutral-700 shrink-0">
               G
             </div>
             <div class="sidebar-label whitespace-nowrap min-w-0">
-              <p class="font-bold text-xs text-black leading-tight truncate">
-                Guest User
-              </p>
-              <a
-                href="{% url 'accounts:login' %}"
-                class="text-[10px] font-semibold text-blue-600 hover:underline truncate"
-                >Sign In</a
-              >
+              <p class="font-bold text-xs text-black leading-tight truncate">Guest User</p>
+              <a href="{% url 'accounts:login' %}" class="text-[10px] font-semibold text-blue-600 hover:underline truncate">Sign In</a>
             </div>
             {% endif %}
           </div>
 
-          <!-- 3 Dots Icon -->
-          <svg
-            class="w-3.5 h-3.5 stroke-neutral-400 sidebar-label shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
-            />
+          <svg class="w-3.5 h-3.5 stroke-neutral-400 sidebar-label shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
           </svg>
         </div>
       </div>
     </aside>
 
     <!-- Main Dynamic Area -->
-    <main id="main-content" class="flex-1 bg-white p-8 overflow-y-auto">
+    <main id="main-content" class="flex-1 bg-white p-4 md:p-8 overflow-y-auto">
       {% block content %} {% endblock %}
     </main>
 
@@ -251,6 +225,33 @@
 
     <!-- Global Scripts -->
     <script>
+      // Mobile Drawer Toggle
+      function toggleMobileSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+        const isClosed = sidebar.classList.contains("-translate-x-full");
+
+        if (isClosed) {
+          sidebar.classList.remove("-translate-x-full");
+          overlay.classList.remove("hidden");
+        } else {
+          sidebar.classList.add("-translate-x-full");
+          overlay.classList.add("hidden");
+        }
+      }
+
+      // Close mobile drawer automatically when HTMX loads a new page
+      document.body.addEventListener("htmx:afterSwap", function (evt) {
+        if (evt.detail.target.id === "main-content") {
+          const sidebar = document.getElementById("sidebar");
+          const overlay = document.getElementById("sidebar-overlay");
+          if (!sidebar.classList.contains("-translate-x-full") && window.innerWidth < 768) {
+            toggleMobileSidebar();
+          }
+        }
+        initKanban();
+      });
+
       // Active Navigation Link Styling
       const activeClasses = [
         "bg-black",
@@ -310,7 +311,7 @@
       window.addEventListener("popstate", syncNavWithURL);
       document.addEventListener("DOMContentLoaded", syncNavWithURL);
 
-      // Sidebar Toggle
+      // Desktop Sidebar Collapse Toggle
       function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         const labels = document.querySelectorAll(".sidebar-label");
@@ -339,12 +340,12 @@
             "justify-center",
             "p-1",
             "border-transparent",
-            "bg-transparent",
+            "bg-transparent"
           );
           userCard.classList.remove(
             "p-2",
             "bg-neutral-50/70",
-            "border-black/10",
+            "border-black/10"
           );
 
           toggleIcon.classList.add("rotate-180");
@@ -366,7 +367,7 @@
             "justify-center",
             "p-1",
             "border-transparent",
-            "bg-transparent",
+            "bg-transparent"
           );
           userCard.classList.add("p-2", "bg-neutral-50/70", "border-black/10");
 
@@ -393,6 +394,7 @@
           menu.classList.add("hidden");
         }
       });
+
       let isDragging = false;
 
       function isCardClick(event) {
@@ -407,7 +409,7 @@
             const cookie = cookies[i].trim();
             if (cookie.substring(0, name.length + 1) === name + "=") {
               cookieValue = decodeURIComponent(
-                cookie.substring(name.length + 1),
+                cookie.substring(name.length + 1)
               );
               break;
             }
@@ -464,8 +466,7 @@
 
         if (totalEl) totalEl.textContent = totalApplications;
         if (appliedEl) appliedEl.textContent = statusCounts.APPLIED;
-        if (interviewingEl)
-          interviewingEl.textContent = statusCounts.INTERVIEWING;
+        if (interviewingEl) interviewingEl.textContent = statusCounts.INTERVIEWING;
         if (offerEl) offerEl.textContent = statusCounts.OFFER;
         if (rejectedEl) rejectedEl.textContent = statusCounts.REJECTED;
       }
@@ -503,16 +504,15 @@
                 const cardId = evt.item.getAttribute("data-id");
                 const targetStatus = evt.to.getAttribute("data-status");
 
-                // Update card styling based on target status
                 evt.item.classList.remove(
                   "bg-blue-50/60",
                   "bg-amber-50/60",
                   "bg-emerald-50/60",
                   "bg-rose-50/60",
-                  "bg-white",
+                  "bg-white"
                 );
                 evt.item.classList.add(
-                  statusColors[targetStatus] || "bg-white",
+                  statusColors[targetStatus] || "bg-white"
                 );
 
                 refreshKanbanCounts();
@@ -537,9 +537,6 @@
       }
 
       initKanban();
-      document.body.addEventListener("htmx:afterSwap", function () {
-        initKanban();
-      });
 
       function closeDrawerDirect() {
         const container = document.getElementById("drawer-container");
@@ -552,21 +549,53 @@
         }
       }
 
-
-      {% comment %} Filter button {% endcomment %}
       function toggleFilterMenu(e) {
-          e.stopPropagation();
-          const menu = document.getElementById('filterMenu');
-          menu.classList.toggle('hidden');
-        }
+        e.stopPropagation();
+        const menu = document.getElementById("filterMenu");
+        menu.classList.toggle("hidden");
+      }
 
-        document.addEventListener('click', (e) => {
-          const menu = document.getElementById('filterMenu');
-          const btn = document.getElementById('filterButton');
-          if (menu && !menu.contains(e.target) && !btn.contains(e.target)) {
-            menu.classList.add('hidden');
-          }
-        });
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("filterMenu");
+        const btn = document.getElementById("filterButton");
+        if (menu && !menu.contains(e.target) && !btn?.contains(e.target)) {
+          menu.classList.add("hidden");
+        }
+      });
+
+
+function scrollHeatmapToToday() {
+  if (window.innerWidth >= 768) return;
+
+  const container = document.getElementById("heatmap-scroll-container");
+  const todayElement = document.getElementById("heatmap-today");
+
+  if (container && todayElement) {
+    const containerRect = container.getBoundingClientRect();
+    const todayRect = todayElement.getBoundingClientRect();
+
+    const scrollLeftTarget =
+      container.scrollLeft +
+      (todayRect.left - containerRect.left) -
+      (container.clientWidth / 2) +
+      (todayRect.width / 2);
+
+    container.scrollTo({
+      left: Math.max(0, scrollLeftTarget),
+      behavior: "smooth"
+    });
+  }
+}
+
+window.addEventListener("load", () => {
+  setTimeout(scrollHeatmapToToday, 100);
+});
+
+document.body.addEventListener("htmx:afterSwap", function (evt) {
+  setTimeout(scrollHeatmapToToday, 60);
+});
+
+window.addEventListener("resize", scrollHeatmapToToday);
 
     </script>
   </body>
