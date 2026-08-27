@@ -1,10 +1,8 @@
-import csv
 import json
 import mimetypes
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg, Count, Min, Q
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -212,7 +210,7 @@ def update_application_status(request, pk):
 @login_required
 def application_detail_drawer(request, pk):
     application = get_object_or_404(
-        Application.objects.select_related("company"), pk=pk, user=request.user
+        Application.objects.select_related("company", "platform"), pk=pk, user=request.user
     )
     return render(
         request,
