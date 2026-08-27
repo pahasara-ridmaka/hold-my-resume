@@ -28,6 +28,12 @@ class Company(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+ 
+class Platform(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class Application(models.Model):
     class Status(models.TextChoices):
@@ -36,11 +42,6 @@ class Application(models.Model):
         OFFER = "OFFER", "Offer"
         REJECTED = "REJECTED", "Rejected"
 
-    class Platform(models.TextChoices):
-        LINKEDIN = "LINKEDIN", "LinkedIn"
-        INDEED = "INDEED", "Indeed"
-        COMPANY_SITE = "COMPANY_SITE", "Company Website"
-        OTHER = "OTHER", "Other"
 
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
 
@@ -63,11 +64,13 @@ class Application(models.Model):
         default=Status.APPLIED,
     )
 
-    platform = models.CharField(
-        max_length=50,
-        choices=Platform.choices,
-        default=Platform.LINKEDIN,
+    platform = models.ForeignKey(
+        Platform, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True
     )
+    
     resume_file = models.FileField(storage=private_resume_storage, blank=True, null=True)
     cover_letter_file = models.FileField(
         storage=private_cover_letter_storage, blank=True, null=True

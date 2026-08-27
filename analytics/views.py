@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 
-from applications.models import Application
+from applications.models import Application, Platform
 
 
 @login_required
@@ -89,31 +89,33 @@ def analytics_view(request):
         },
     ]
 
-    # --- 3. Top Sources / Platforms Breakdown ---
-    platform_map = dict(Application.Platform.choices)
+# --- 3. Top Sources / Platforms Breakdown ---
     badge_styles = {
-        Application.Platform.LINKEDIN: "bg-blue-50/60 text-blue-700",
-        Application.Platform.INDEED: "bg-amber-50/60 text-amber-700",
-        Application.Platform.COMPANY_SITE: "bg-emerald-50/60 text-emerald-700",
-        Application.Platform.OTHER: "bg-neutral-50 text-neutral-700",
+        "linkedin": "bg-blue-50/60 text-blue-700",
+        "indeed": "bg-amber-50/60 text-amber-700",
+        "company website": "bg-emerald-50/60 text-emerald-700",
     }
+    default_badge = "bg-neutral-50 text-neutral-700"
 
     sources_query = (
-        user_apps.values("platform").annotate(count=Count("id")).order_by("-count")
+        user_apps.values("platform__name")
+        .annotate(count=Count("id"))
+        .order_by("-count")
     )
 
     top_sources = []
     for item in sources_query:
-        p_code = item["platform"]
+        p_name = item["platform__name"] or "Other / Direct"
         cnt = item["count"]
         pct = round(cnt / total_apps * 100) if total_apps > 0 else 0
+        
+        badge_class = badge_styles.get(p_name.lower(), default_badge)
+
         top_sources.append({
-            "name": platform_map.get(p_code, p_code),
+            "name": p_name,
             "count": cnt,
             "pct": pct,
-            "badge_class": badge_styles.get(
-                p_code, "bg-neutral-50 text-neutral-700"
-            ),
+            "badge_class": badge_class,
         })
 
     # --- 4. Dynamic Historical Activity Heatmap Logic ---
