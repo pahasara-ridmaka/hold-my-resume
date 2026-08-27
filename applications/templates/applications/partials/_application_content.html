@@ -3,9 +3,9 @@
 
 <div class="space-y-6" id="application-content">
   <!-- Top Title & Action -->
-  <div class="flex items-center justify-between">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-extrabold tracking-tight text-black">
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-black">
         Applications
       </h1>
       <p class="text-gray-500 text-xs mt-0.5">
@@ -13,115 +13,115 @@
       </p>
     </div>
 
-    <div class="flex items-center gap-3">
-<!-- Filter Dropdown Component  -->
-<div class="relative inline-block text-left">
-  <!-- Filter Button -->
-  <button
-    id="filterButton"
-    type="button"
-    onclick="toggleFilterMenu(event)"
-    class="inline-flex items-center gap-2 border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-black hover:text-white transition"
-  >
-    <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-    </svg>
-    Filter
-    {% if current_time_filter and current_time_filter != 'all' %}
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-    {% endif %}
-  </button>
+    <div class="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
+      <!-- Filter Dropdown Component -->
+      <div class="relative inline-block text-left">
+        <!-- Filter Button -->
+        <button
+          id="filterButton"
+          type="button"
+          onclick="toggleFilterMenu(event)"
+          class="inline-flex items-center gap-2 border border-black rounded-full px-3.5 py-1.5 text-xs font-semibold hover:bg-black hover:text-white transition active:scale-95"
+        >
+          <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Filter
+          {% if current_time_filter and current_time_filter != 'all' %}
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          {% endif %}
+        </button>
 
-  <!-- Filter Dropdown Menu -->
-  <div
-    id="filterMenu"
-    class="hidden absolute right-0 mt-2 w-56 rounded-2xl border-2 border-black bg-white p-3.5 z-50 space-y-3"
-  >
-    <div class="flex items-center justify-between pb-2 border-b border-black/10">
-      <span class="text-[10px] font-black uppercase tracking-wider text-neutral-500">Date Applied</span>
-      {% if current_time_filter and current_time_filter != 'all' %}
-      <button 
-        type="button" 
-        hx-get="{% url 'applications:application_list' %}?time_filter=all"
-        hx-target="#application-content"
-        hx-swap="outerHTML"
-        class="text-[10px] font-bold text-neutral-400 hover:text-black transition underline"
-      >
-        Reset
-      </button>
-      {% endif %}
-    </div>
-    
-    <div class="space-y-1.5 text-xs font-bold text-black">
-      <!-- All Time -->
-      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == 'all' or not current_time_filter %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
-        <span>All Time</span>
-        <input 
-          type="radio" 
-          name="time_filter" 
-          value="all"
-          hx-get="{% url 'applications:application_list' %}?time_filter=all"
-          hx-target="#application-content"
-          hx-swap="outerHTML"
-          class="accent-black w-3.5 h-3.5" 
-          {% if current_time_filter == 'all' or not current_time_filter %}checked{% endif %} 
-        />
-      </label>
+        <!-- Filter Dropdown Menu -->
+        <div
+          id="filterMenu"
+          class="hidden absolute left-0 sm:left-auto sm:right-0 mt-2 w-56 rounded-2xl border-2 border-black bg-white p-3.5 z-50 space-y-3 shadow-xl"
+        >
+          <div class="flex items-center justify-between pb-2 border-b border-black/10">
+            <span class="text-[10px] font-black uppercase tracking-wider text-neutral-500">Date Applied</span>
+            {% if current_time_filter and current_time_filter != 'all' %}
+            <button 
+              type="button" 
+              hx-get="{% url 'applications:application_list' %}?time_filter=all"
+              hx-target="#application-content"
+              hx-swap="outerHTML"
+              class="text-[10px] font-bold text-neutral-400 hover:text-black transition underline"
+            >
+              Reset
+            </button>
+            {% endif %}
+          </div>
+          
+          <div class="space-y-1.5 text-xs font-bold text-black">
+            <!-- All Time -->
+            <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == 'all' or not current_time_filter %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+              <span>All Time</span>
+              <input 
+                type="radio" 
+                name="time_filter" 
+                value="all"
+                hx-get="{% url 'applications:application_list' %}?time_filter=all"
+                hx-target="#application-content"
+                hx-swap="outerHTML"
+                class="accent-black w-3.5 h-3.5" 
+                {% if current_time_filter == 'all' or not current_time_filter %}checked{% endif %} 
+              />
+            </label>
 
-      <!-- Today -->
-      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == 'today' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
-        <span>Today</span>
-        <input 
-          type="radio" 
-          name="time_filter" 
-          value="today"
-          hx-get="{% url 'applications:application_list' %}?time_filter=today"
-          hx-target="#application-content"
-          hx-swap="outerHTML"
-          class="accent-black w-3.5 h-3.5" 
-          {% if current_time_filter == 'today' %}checked{% endif %} 
-        />
-      </label>
+            <!-- Today -->
+            <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == 'today' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+              <span>Today</span>
+              <input 
+                type="radio" 
+                name="time_filter" 
+                value="today"
+                hx-get="{% url 'applications:application_list' %}?time_filter=today"
+                hx-target="#application-content"
+                hx-swap="outerHTML"
+                class="accent-black w-3.5 h-3.5" 
+                {% if current_time_filter == 'today' %}checked{% endif %} 
+              />
+            </label>
 
-      <!-- Past 7 Days -->
-      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == '7days' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
-        <span>Past 7 Days</span>
-        <input 
-          type="radio" 
-          name="time_filter" 
-          value="7days"
-          hx-get="{% url 'applications:application_list' %}?time_filter=7days"
-          hx-target="#application-content"
-          hx-swap="outerHTML"
-          class="accent-black w-3.5 h-3.5" 
-          {% if current_time_filter == '7days' %}checked{% endif %} 
-        />
-      </label>
+            <!-- Past 7 Days -->
+            <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == '7days' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+              <span>Past 7 Days</span>
+              <input 
+                type="radio" 
+                name="time_filter" 
+                value="7days"
+                hx-get="{% url 'applications:application_list' %}?time_filter=7days"
+                hx-target="#application-content"
+                hx-swap="outerHTML"
+                class="accent-black w-3.5 h-3.5" 
+                {% if current_time_filter == '7days' %}checked{% endif %} 
+              />
+            </label>
 
-      <!-- Past 30 Days -->
-      <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == '30days' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
-        <span>Past 30 Days</span>
-        <input 
-          type="radio" 
-          name="time_filter" 
-          value="30days"
-          hx-get="{% url 'applications:application_list' %}?time_filter=30days"
-          hx-target="#application-content"
-          hx-swap="outerHTML"
-          class="accent-black w-3.5 h-3.5" 
-          {% if current_time_filter == '30days' %}checked{% endif %} 
-        />
-      </label>
-    </div>
-  </div>
-</div>
+            <!-- Past 30 Days -->
+            <label class="flex items-center justify-between p-2 rounded-xl border {% if current_time_filter == '30days' %}bg-neutral-100 border-black{% else %}border-black/10 hover:border-black hover:bg-neutral-50{% endif %} cursor-pointer transition">
+              <span>Past 30 Days</span>
+              <input 
+                type="radio" 
+                name="time_filter" 
+                value="30days"
+                hx-get="{% url 'applications:application_list' %}?time_filter=30days"
+                hx-target="#application-content"
+                hx-swap="outerHTML"
+                class="accent-black w-3.5 h-3.5" 
+                {% if current_time_filter == '30days' %}checked{% endif %} 
+              />
+            </label>
+          </div>
+        </div>
+      </div>
 
       <!-- Add Application Button -->
       <button
         hx-get="{% url 'applications:add_application' %}"
         hx-target="#drawer-container"
         hx-swap="innerHTML"
-        class="inline-flex items-center gap-2 bg-black text-white border border-black rounded-full px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+        class="inline-flex items-center gap-1.5 sm:gap-2 bg-black text-white border border-black rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-semibold hover:bg-gray-800 transition active:scale-95 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] whitespace-nowrap"
       >
         <svg
           class="w-3.5 h-3.5 stroke-current"
@@ -140,18 +140,25 @@
     </div>
   </div>
 
-  <!-- Metric Stat Bar (Minimal Bar with 5 stats) -->
-  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border border-black/15 bg-neutral-50/70 rounded-xl divide-y sm:divide-y-0 sm:divide-x divide-black/10 overflow-hidden">
-    
-    <!-- Total -->
-    <div class="p-3.5 px-5">
-      <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Total Applied</span>
-      <div class="flex items-baseline gap-1.5 mt-0.5">
-        <span id="metric-total" class="text-2xl font-black tracking-tight text-black">{{ metrics.total }}</span>
-        <span class="text-[11px] text-neutral-400 font-medium">all</span>
-      </div>
+  <!-- Metric Stat Bar -->
+<!-- Metric Stat Bar (Balanced Mobile & Desktop) -->
+<div class="grid grid-cols-2 lg:grid-cols-5 border border-black/15 bg-neutral-50/70 rounded-2xl overflow-hidden divide-y divide-black/10 lg:divide-y-0 lg:divide-x">
+  
+  <!-- Total (Full row on Mobile, 1 col on Desktop) -->
+  <div class="col-span-2 lg:col-span-1 p-3.5 px-5 bg-white/60 lg:bg-transparent flex lg:flex-col items-center lg:items-start justify-between">
+    <div>
+      <span class="text-[10px] font-black uppercase tracking-wider text-neutral-500">Total Applied</span>
+      <p class="text-[11px] text-neutral-400 font-medium lg:hidden">All active & past</p>
     </div>
+    <div class="flex items-baseline gap-1.5 lg:mt-0.5">
+      <span id="metric-total" class="text-2xl font-black tracking-tight text-black">{{ metrics.total }}</span>
+      <span class="text-[11px] text-neutral-400 font-medium hidden lg:inline">all</span>
+    </div>
+  </div>
 
+  <!-- 2x2 Grid for Remaining 4 Statuses on Mobile -->
+  <div class="col-span-2 grid grid-cols-2 divide-x divide-black/10 lg:contents">
+    
     <!-- Applied -->
     <div class="p-3.5 px-5">
       <div class="flex items-center gap-1.5">
@@ -159,8 +166,8 @@
         <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Applied</span>
       </div>
       <div class="flex items-baseline gap-1.5 mt-0.5">
-        <span id="metric-applied" class="text-2xl font-black tracking-tight text-black">{{ metrics.applied }}</span>
-        <span class="text-[11px] text-neutral-400 font-medium">in queue</span>
+        <span id="metric-applied" class="text-xl sm:text-2xl font-black tracking-tight text-black">{{ metrics.applied }}</span>
+        <span class="text-[10px] sm:text-[11px] text-neutral-400 font-medium">in queue</span>
       </div>
     </div>
 
@@ -171,11 +178,15 @@
         <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Interviews</span>
       </div>
       <div class="flex items-baseline gap-1.5 mt-0.5">
-        <span id="metric-interviewing" class="text-2xl font-black tracking-tight text-black">{{ metrics.interviewing }}</span>
-        <span class="text-[11px] text-neutral-400 font-medium">active</span>
+        <span id="metric-interviewing" class="text-xl sm:text-2xl font-black tracking-tight text-black">{{ metrics.interviewing }}</span>
+        <span class="text-[10px] sm:text-[11px] text-neutral-400 font-medium">active</span>
       </div>
     </div>
 
+  </div>
+
+  <div class="col-span-2 grid grid-cols-2 divide-x divide-black/10 lg:contents">
+    
     <!-- Offer -->
     <div class="p-3.5 px-5">
       <div class="flex items-center gap-1.5">
@@ -183,31 +194,32 @@
         <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Offers</span>
       </div>
       <div class="flex items-baseline gap-1.5 mt-0.5">
-        <span id="metric-offer" class="text-2xl font-black tracking-tight text-black">{{ metrics.offer }}</span>
-        <span class="text-[11px] text-emerald-600 font-medium">won</span>
+        <span id="metric-offer" class="text-xl sm:text-2xl font-black tracking-tight text-black">{{ metrics.offer }}</span>
+        <span class="text-[10px] sm:text-[11px] text-emerald-600 font-medium">won</span>
       </div>
     </div>
 
     <!-- Rejected -->
-    <div class="p-3.5 px-5 col-span-2 sm:col-span-1 border-t sm:border-t-0">
+    <div class="p-3.5 px-5">
       <div class="flex items-center gap-1.5">
         <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
         <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Rejected</span>
       </div>
       <div class="flex items-baseline gap-1.5 mt-0.5">
-        <span id="metric-rejected" class="text-2xl font-black tracking-tight text-black">{{ metrics.rejected|default:0 }}</span>
-        <span class="text-[11px] text-rose-500 font-medium">closed</span>
+        <span id="metric-rejected" class="text-xl sm:text-2xl font-black tracking-tight text-black">{{ metrics.rejected|default:0 }}</span>
+        <span class="text-[10px] sm:text-[11px] text-rose-500 font-medium">closed</span>
       </div>
     </div>
 
   </div>
 
-  <!-- Kanban Board Columns Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-2">
+</div>
+  <!-- Kanban Board Columns (Horizontal scroll on mobile, 4-col grid on desktop) -->
+  <div class="flex md:grid md:grid-cols-4 gap-4 sm:gap-6 pt-2 overflow-x-auto pb-4 md:pb-0 snap-x snap-mandatory">
     {% for column in kanban_columns %}
-    <div class="space-y-4 kanban-column-wrapper">
+    <div class="space-y-3 sm:space-y-4 kanban-column-wrapper min-w-[280px] sm:min-w-[300px] md:min-w-0 flex-1 snap-start shrink-0">
       <!-- Column Header -->
-      <div class="flex items-center justify-between pb-3 border-b-2 border-black">
+      <div class="flex items-center justify-between pb-2.5 sm:pb-3 border-b-2 border-black">
         <div class="flex items-center gap-2">
           <span
             class="w-2.5 h-2.5 rounded-full border border-black 
@@ -231,12 +243,12 @@
 
       <!-- Draggable Container -->
       <div
-        class="kanban-col space-y-4 min-h-[350px] p-2 rounded-2xl bg-gray-50/50"
+        class="kanban-col space-y-3 sm:space-y-4 min-h-[300px] sm:min-h-[350px] p-2 rounded-2xl bg-gray-50/50"
         data-status="{{ column.status_key }}"
       >
         {% for app in column.apps %}
         <div
-          class="kanban-card group border-2 border-black rounded-2xl p-4 space-y-3 transition-all cursor-grab active:cursor-grabbing select-none hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
+          class="kanban-card group border-2 border-black rounded-2xl p-3.5 sm:p-4 space-y-2.5 sm:space-y-3 transition-all cursor-grab active:cursor-grabbing select-none hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
           {% if column.status_key == 'APPLIED' %}bg-blue-50/60
           {% elif column.status_key == 'INTERVIEWING' %}bg-amber-50/60
           {% elif column.status_key == 'OFFER' %}bg-emerald-50/60
@@ -251,7 +263,7 @@
           <!-- Top Row: Title, Company & Date -->
           <div class="flex justify-between items-start gap-2 pointer-events-none">
             <div class="min-w-0 flex-1">
-              <h3 class="text-base font-bold text-black leading-snug truncate group-hover:text-gray-800">
+              <h3 class="text-sm sm:text-base font-bold text-black leading-snug truncate group-hover:text-gray-800">
                 {{ app.job_title }}
               </h3>
               <div class="flex items-center gap-1.5 text-xs text-gray-700 font-medium mt-0.5">
@@ -272,12 +284,12 @@
           <div class="flex items-center justify-between gap-1.5 pt-1 border-t border-black/10 pointer-events-none">
             <div class="flex items-center gap-1.5 overflow-hidden">
               {% if app.salary_estimate %}
-              <span class="border border-black rounded-md px-1.5 py-0.5 text-[11px] font-bold bg-white text-black shrink-0">
+              <span class="border border-black rounded-md px-1.5 py-0.5 text-[10px] sm:text-[11px] font-bold bg-white text-black shrink-0">
                 ${{ app.salary_estimate|floatformat:0 }}
               </span>
               {% endif %} 
               {% if app.company.location %}
-              <span class="border border-black/20 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-gray-800 bg-white/70 truncate max-w-[100px]">
+              <span class="border border-black/20 rounded-md px-1.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-gray-800 bg-white/70 truncate max-w-[90px] sm:max-w-[100px]">
                 {{ app.company.location }}
               </span>
               {% endif %}
@@ -304,4 +316,3 @@
 
 <!-- CSRF Token -->
 {% csrf_token %}
-

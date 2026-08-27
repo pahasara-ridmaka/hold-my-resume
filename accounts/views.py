@@ -11,7 +11,7 @@ from .forms import ProfileUpdateForm, UserRegistrationForm
 
 def home_view(request):
 
-    return render(request, "accounts/home.html")
+    return redirect('applications:application_list') if request.user.is_authenticated else redirect('accounts:login')
 
 def register_view(request):
     if request.user.is_authenticated:
