@@ -1,95 +1,88 @@
-# HOLDMYRESUME - Job Application Tracker
+<div align="center">
 
-> Development project
+# 💼 HOLDMYRESUME
 
-A Django application for organizing job applications, tracking their progress, and reviewing application analytics. Users can create an account, manage their profile, attach resumes and cover letters, update application statuses, and export analytics as CSV.
+### _A streamlined Django platform to track, manage, and analyze your job search_
 
-## Current Features
+[![Django](https://img.shields.io/badge/Django-6.1-092E20?logo=django)](https://www.djangoproject.com/)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python)](https://www.python.org/)
+[![HTMX](https://img.shields.io/badge/HTMX-Fast%20UI-3366CC?logo=htmx)](https://htmx.org/)
+[![SQLite](https://img.shields.io/badge/SQLite-Local%20DB-003B57?logo=sqlite)](https://www.sqlite.org/)
 
-- User registration, login, logout, password reset, profile editing, and password changes
-- Application records linked to a company and optional application platform
-- Application statuses: Applied, Interviewing, Offer, and Rejected
-- Optional job URLs, descriptions, application dates, resumes, and cover letters
-- Analytics dashboard with CSV export
-- Private local storage for uploaded resumes and cover letters
-- Django admin interface
+🔗 **Live Demo:** [https://pridmaka.pythonanywhere.com](https://pridmaka.pythonanywhere.com)
 
-## Technology
+---
 
-- Python
-- Django 6.1
-- SQLite for local development
-- Django templates, CSS, and HTMX-based drawer interactions
+</div>
 
-## Development Setup
+🚀 **HOLDMYRESUME** organizes your job hunt in one centralized dashboard. Track application stages, store private resumes and cover letters, inspect visual metrics, and export analytics seamlessly.
 
-### Prerequisites
+## ✨ Core Features
 
-- Python 3.12 or newer
-- `pip`
+- **Account Management:** User registration, authentication, profile editing, and password recovery
+- **Application Tracking:** Link applications to companies/platforms with full stage workflows (`Applied`, `Interviewing`, `Offer`, `Rejected`)
+- **Document Locker:** Private, secure storage for targeted resumes and cover letters
+- **Dynamic UI:** Smooth slide-out drawer views powered by HTMX
+- **Analytics & Export:** Visual dashboard breakdown with one-click CSV export
+- **Admin Control:** Django admin panel integration for comprehensive data oversight
 
-### Installation
+## 🧰 Tech Stack
 
-From the project directory:
+- **Backend:** Python 3.12+, Django 6.1
+- **Database:** SQLite (local development)
+- **Frontend:** Django Templates, Custom CSS, HTMX
+- **Storage:** Private local media directories
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install Django
-```
-
-On Windows, activate the virtual environment with:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-Apply database migrations:
-
-```bash
-python manage.py migrate
-```
-
-Create an administrator account when needed:
-
-```bash
-python manage.py createsuperuser
-```
-
-Start the development server:
-
-```bash
-python manage.py runserver
-```
-
-Open <http://127.0.0.1:8000/> in a browser. The admin interface is available at <http://127.0.0.1:8000/admin/>.
-
-## Useful Commands
-
-```bash
-python manage.py check
-python manage.py test
-python manage.py makemigrations
-python manage.py migrate
-```
-
-## Project Structure
+## 📦 Project Structure
 
 ```text
 accounts/       Authentication and user profile workflows
 applications/   Companies, applications, uploads, and status tracking
 analytics/      Dashboard metrics and CSV export
 config/         Django project settings and URL configuration
-templates/      Shared and legal templates
-static/         CSS and image assets
-resumes/        Local resume upload storage
-cover_letters/  Local cover-letter upload storage
+templates/      Shared core and legal templates
+static/         CSS stylesheets, icons, and static assets
+resumes/        Local storage for uploaded resumes
+cover_letters/  Local storage for uploaded cover letters
 ```
 
-## Development Notes
+## 🧪 Local Dev (Quick Start)
 
-- The default database is `db.sqlite3`.
-- Uploaded files are stored locally in `resumes/` and `cover_letters/` during development.
-- The current settings use `DEBUG = True` and development credentials. Configure environment-specific secrets, email, hosts, and file storage before deployment.
-- No dependency lockfile or requirements file is currently included; dependencies should be recorded as the project moves toward deployment.
+1. **Clone and create a virtual environment:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate       # Windows: .venv\Scripts\Activate.ps1
+   ```
+
+2. **Install dependencies and migrate:**
+   ```bash
+   python -m pip install --upgrade pip
+   python -m pip install Django
+   python manage.py migrate
+   ```
+
+3. **Create superuser and launch server:**
+   ```bash
+   python manage.py createsuperuser
+   python manage.py runserver
+   ```
+
+4. **Access the platform:**
+   - App: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+   - Admin: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+## 🛠️ Useful Commands
+
+- `python manage.py check` — Inspect configuration for system issues
+- `python manage.py test` — Run the test suite
+- `python manage.py makemigrations` — Generate schema migrations
+- `python manage.py migrate` — Apply database schema updates
+
+## 🔐 Configuration & Security
+
+- Development runs with `DEBUG = True` and local file storage.
+- Set environment-specific secret keys, email backends, allowed hosts, and remote object storage (e.g., S3) prior to production deployment.
+
+## ✅ Status
+
+Active development. Demo live at [https://pridmaka.pythonanywhere.com](https://pridmaka.pythonanywhere.com).
